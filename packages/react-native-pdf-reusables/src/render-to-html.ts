@@ -5,6 +5,7 @@ import { Document, type DocumentProps } from './components/document/document.js'
 import { Heading, type HeadingProps } from './components/heading/heading.js';
 import { Image, type ImageProps } from './components/image/image.js';
 import { Link, type LinkProps } from './components/link/link.js';
+import { PageBreak } from './components/page-break/page-break.js';
 import { Page, type PageProps, type PageSize } from './components/page/page.js';
 import { Stack, type StackProps } from './components/stack/stack.js';
 import { Text, type TextProps } from './components/text/text.js';
@@ -60,6 +61,10 @@ function renderNode(node: ReactNode): string {
     const props = node.props as PageProps;
     const style = { ...pageDimensions(props.size ?? 'A4'), breakAfter: 'page', ...props.style } satisfies PdfStyle;
     return '<section data-pdf-page' + styleAttribute(style) + '>' + renderChildren(props.children) + '</section>';
+  }
+
+  if (node.type === PageBreak) {
+    return '<div style="break-before:page;page-break-before:always"></div>';
   }
 
   if (node.type === Image) {

@@ -3,6 +3,7 @@ export { Document, type DocumentProps } from './components/document/document.js'
 export { Heading, type HeadingProps } from './components/heading/heading.js';
 export { Image, type ImageProps } from './components/image/image.js';
 export { Link, type LinkProps } from './components/link/link.js';
+export { PageBreak } from './components/page-break/page-break.js';
 export { Page, type PageProps, type PageSize } from './components/page/page.js';
 export { Stack, type StackProps } from './components/stack/stack.js';
 export { Text, type TextProps } from './components/text/text.js';
