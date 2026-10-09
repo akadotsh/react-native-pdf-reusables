@@ -20,6 +20,7 @@ import { Signature, type SignatureProps } from './components/signature/signature
 import { Stack, type StackProps } from './components/stack/stack.js';
 import { Text, type TextProps } from './components/text/text.js';
 import { Totals, type TotalsProps } from './components/totals/totals.js';
+import { Watermark, type WatermarkProps } from './components/watermark/watermark.js';
 import type { PdfStyle } from './style.js';
 
 export function renderToHtml(node: ReactNode): string {
@@ -140,6 +141,20 @@ function renderNode(node: ReactNode): string {
     );
   }
 
+  if (node.type === Watermark) {
+    const props = node.props as WatermarkProps;
+    const style = {
+      left: '50%',
+      opacity: 0.12,
+      pointerEvents: 'none',
+      position: 'fixed',
+      top: '50%',
+      transform: 'translate(-50%, -50%) rotate(-45deg)',
+      ...props.style,
+    } satisfies PdfStyle;
+    return '<div data-pdf-watermark' + styleAttribute(style) + '>' + renderChildren(props.children) + '</div>';
+  }
+
   if (node.type === Page) {
     const props = node.props as PageProps;
     const style = { ...pageDimensions(props.size ?? 'A4'), breakAfter: 'page', ...props.style } satisfies PdfStyle;
@@ -209,7 +224,7 @@ function styleAttribute(style?: PdfStyle): string {
     .filter((entry) => entry[1] != null)
     .map(([property, value]) => {
       const cssProperty = property.replace(/[A-Z]/g, (letter) => '-' + letter.toLowerCase());
-      const cssValue = typeof value === 'number' ? String(value) + 'px' : String(value);
+      const cssValue = typeof value === 'number' && property !== 'opacity' ? String(value) + 'px' : String(value);
       return cssProperty + ':' + escapeAttribute(cssValue).replaceAll(';', '');
     })
     .join(';');

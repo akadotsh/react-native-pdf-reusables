@@ -18,6 +18,7 @@ export type PdfStyle = {
   height?: number | string;
   justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between';
   lineHeight?: number;
+  left?: number | string;
   margin?: number;
   marginBottom?: number;
   marginLeft?: number;
@@ -25,12 +26,17 @@ export type PdfStyle = {
   marginTop?: number;
   maxWidth?: number | string;
   minHeight?: number | string;
+  opacity?: number;
   padding?: number;
   paddingBottom?: number;
   paddingLeft?: number;
   paddingRight?: number;
   paddingTop?: number;
   pageBreakInside?: 'auto' | 'avoid';
+  pointerEvents?: 'auto' | 'none';
+  position?: 'relative' | 'absolute' | 'fixed';
   textAlign?: 'left' | 'center' | 'right';
+  top?: number | string;
+  transform?: string;
   width?: number | string;
 };

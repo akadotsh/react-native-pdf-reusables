@@ -22,5 +22,6 @@ export { Signature, type SignatureProps } from './components/signature/signature
 export { Stack, type StackProps } from './components/stack/stack.js';
 export { Text, type TextProps } from './components/text/text.js';
 export { Totals, type TotalsProps } from './components/totals/totals.js';
+export { Watermark, type WatermarkProps } from './components/watermark/watermark.js';
 export { renderToHtml } from './render-to-html.js';
 export type { PdfStyle } from './style.js';
