@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { PdfStyle } from './style.js';
+import type { PdfStyle } from '../../style.js';
 
 export type TextProps = {
   children?: ReactNode;
