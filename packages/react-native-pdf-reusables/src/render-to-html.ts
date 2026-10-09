@@ -5,7 +5,11 @@ import { Document, type DocumentProps } from './components/document/document.js'
 import { Heading, type HeadingProps } from './components/heading/heading.js';
 import { Image, type ImageProps } from './components/image/image.js';
 import { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together.js';
-import { KeyValueList, type KeyValueListProps } from './components/key-value-list/key-value-list.js';
+import {
+  KeyValueList,
+  type KeyValueItem,
+  type KeyValueListProps,
+} from './components/key-value-list/key-value-list.js';
 import { Link, type LinkProps } from './components/link/link.js';
 import { PageBreak } from './components/page-break/page-break.js';
 import { PageFooter, type PageFooterProps } from './components/page-footer/page-footer.js';
@@ -13,6 +17,7 @@ import { PageHeader, type PageHeaderProps } from './components/page-header/page-
 import { Page, type PageProps, type PageSize } from './components/page/page.js';
 import { Stack, type StackProps } from './components/stack/stack.js';
 import { Text, type TextProps } from './components/text/text.js';
+import { Totals, type TotalsProps } from './components/totals/totals.js';
 import type { PdfStyle } from './style.js';
 
 export function renderToHtml(node: ReactNode): string {
@@ -69,18 +74,13 @@ function renderNode(node: ReactNode): string {
 
   if (node.type === KeyValueList) {
     const props = node.props as KeyValueListProps;
-    const items = props.items
-      .map(
-        (item) =>
-          '<div style="display:flex;justify-content:space-between;gap:16px">' +
-          '<dt>' +
-          renderNode(item.label) +
-          '</dt><dd style="margin:0">' +
-          renderNode(item.value) +
-          '</dd></div>',
-      )
-      .join('');
-    return '<dl' + styleAttribute(props.style) + '>' + items + '</dl>';
+    return '<dl' + styleAttribute(props.style) + '>' + renderKeyValueItems(props.items) + '</dl>';
+  }
+
+  if (node.type === Totals) {
+    const props = node.props as TotalsProps;
+    const style = { breakInside: 'avoid', pageBreakInside: 'avoid', ...props.style } satisfies PdfStyle;
+    return '<dl data-pdf-totals' + styleAttribute(style) + '>' + renderKeyValueItems(props.items) + '</dl>';
   }
 
   if (node.type === PageHeader) {
@@ -139,6 +139,20 @@ function renderNode(node: ReactNode): string {
 
 function renderChildren(children: ReactNode): string {
   return Children.toArray(children).map(renderNode).join('');
+}
+
+function renderKeyValueItems(items: readonly KeyValueItem[]): string {
+  return items
+    .map(
+      (item) =>
+        '<div style="display:flex;justify-content:space-between;gap:16px">' +
+        '<dt>' +
+        renderNode(item.label) +
+        '</dt><dd style="margin:0">' +
+        renderNode(item.value) +
+        '</dd></div>',
+    )
+    .join('');
 }
 
 function styleAttribute(style?: PdfStyle): string {

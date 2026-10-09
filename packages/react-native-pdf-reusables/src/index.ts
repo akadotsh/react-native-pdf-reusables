@@ -15,5 +15,6 @@ export { PageHeader, type PageHeaderProps } from './components/page-header/page-
 export { Page, type PageProps, type PageSize } from './components/page/page.js';
 export { Stack, type StackProps } from './components/stack/stack.js';
 export { Text, type TextProps } from './components/text/text.js';
+export { Totals, type TotalsProps } from './components/totals/totals.js';
 export { renderToHtml } from './render-to-html.js';
 export type { PdfStyle } from './style.js';
