@@ -196,6 +196,19 @@ function renderNode(node: ReactNode): string {
     );
   }
 
+  if (typeof node.type === 'function') {
+    const component = node.type as unknown as {
+      (props: unknown): ReactNode;
+      prototype?: { isReactComponent?: unknown };
+    };
+    if (component.prototype?.isReactComponent) {
+      throw new TypeError('Class components are not supported in PDF documents');
+    }
+
+    // shortcut: composite components must be pure functions without hooks, add a custom reconciler when hooks are needed.
+    return renderNode(component(node.props));
+  }
+
   throw new TypeError('Unsupported PDF component');
 }
 
