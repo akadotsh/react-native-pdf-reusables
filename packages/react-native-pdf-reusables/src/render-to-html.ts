@@ -7,6 +7,8 @@ import { Image, type ImageProps } from './components/image/image.js';
 import { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together.js';
 import { Link, type LinkProps } from './components/link/link.js';
 import { PageBreak } from './components/page-break/page-break.js';
+import { PageFooter, type PageFooterProps } from './components/page-footer/page-footer.js';
+import { PageHeader, type PageHeaderProps } from './components/page-header/page-header.js';
 import { Page, type PageProps, type PageSize } from './components/page/page.js';
 import { Stack, type StackProps } from './components/stack/stack.js';
 import { Text, type TextProps } from './components/text/text.js';
@@ -62,6 +64,16 @@ function renderNode(node: ReactNode): string {
     const props = node.props as KeepTogetherProps;
     const style = { breakInside: 'avoid', pageBreakInside: 'avoid', ...props.style } satisfies PdfStyle;
     return '<div' + styleAttribute(style) + '>' + renderChildren(props.children) + '</div>';
+  }
+
+  if (node.type === PageHeader) {
+    const props = node.props as PageHeaderProps;
+    return '<header' + styleAttribute(props.style) + '>' + renderChildren(props.children) + '</header>';
+  }
+
+  if (node.type === PageFooter) {
+    const props = node.props as PageFooterProps;
+    return '<footer' + styleAttribute(props.style) + '>' + renderChildren(props.children) + '</footer>';
   }
 
   if (node.type === Page) {
