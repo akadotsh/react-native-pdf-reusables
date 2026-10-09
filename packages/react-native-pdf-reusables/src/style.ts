@@ -1,6 +1,7 @@
 export type PdfStyle = {
   alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
   backgroundColor?: string;
+  borderCollapse?: 'collapse' | 'separate';
   breakAfter?: 'auto' | 'page';
   breakInside?: 'auto' | 'avoid';
   borderColor?: string;

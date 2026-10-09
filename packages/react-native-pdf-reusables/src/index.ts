@@ -1,3 +1,8 @@
+export {
+  DataTable,
+  type DataTableColumn,
+  type DataTableProps,
+} from './components/data-table/data-table.js';
 export { Divider, type DividerProps } from './components/divider/divider.js';
 export { Document, type DocumentProps } from './components/document/document.js';
 export { Heading, type HeadingProps } from './components/heading/heading.js';

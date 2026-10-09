@@ -1,5 +1,6 @@
 import { Children, isValidElement, type ReactNode } from 'react';
 
+import { DataTable, type DataTableProps } from './components/data-table/data-table.js';
 import { Divider, type DividerProps } from './components/divider/divider.js';
 import { Document, type DocumentProps } from './components/document/document.js';
 import { Heading, type HeadingProps } from './components/heading/heading.js';
@@ -75,6 +76,37 @@ function renderNode(node: ReactNode): string {
   if (node.type === KeyValueList) {
     const props = node.props as KeyValueListProps;
     return '<dl' + styleAttribute(props.style) + '>' + renderKeyValueItems(props.items) + '</dl>';
+  }
+
+  if (node.type === DataTable) {
+    const props = node.props as DataTableProps<unknown>;
+    const tableStyle = { borderCollapse: 'collapse', width: '100%', ...props.style } satisfies PdfStyle;
+    const headers = props.columns
+      .map((column) => '<th' + styleAttribute(props.headerStyle) + '>' + renderNode(column.header) + '</th>')
+      .join('');
+    const rows = props.rows
+      .map((row, rowIndex) => {
+        const cells = props.columns
+          .map(
+            (column) =>
+              '<td' + styleAttribute(props.cellStyle) + '>' + renderNode(column.render(row, rowIndex)) + '</td>',
+          )
+          .join('');
+        return '<tr style="break-inside:avoid;page-break-inside:avoid">' + cells + '</tr>';
+      })
+      .join('');
+    const headerStyle = props.repeatHeader === false ? '' : ' style="display:table-header-group"';
+    return (
+      '<table' +
+      styleAttribute(tableStyle) +
+      '><thead' +
+      headerStyle +
+      '><tr>' +
+      headers +
+      '</tr></thead><tbody>' +
+      rows +
+      '</tbody></table>'
+    );
   }
 
   if (node.type === Totals) {
