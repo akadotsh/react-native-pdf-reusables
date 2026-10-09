@@ -5,6 +5,7 @@ import { Document, type DocumentProps } from './components/document/document.js'
 import { Heading, type HeadingProps } from './components/heading/heading.js';
 import { Image, type ImageProps } from './components/image/image.js';
 import { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together.js';
+import { KeyValueList, type KeyValueListProps } from './components/key-value-list/key-value-list.js';
 import { Link, type LinkProps } from './components/link/link.js';
 import { PageBreak } from './components/page-break/page-break.js';
 import { PageFooter, type PageFooterProps } from './components/page-footer/page-footer.js';
@@ -64,6 +65,22 @@ function renderNode(node: ReactNode): string {
     const props = node.props as KeepTogetherProps;
     const style = { breakInside: 'avoid', pageBreakInside: 'avoid', ...props.style } satisfies PdfStyle;
     return '<div' + styleAttribute(style) + '>' + renderChildren(props.children) + '</div>';
+  }
+
+  if (node.type === KeyValueList) {
+    const props = node.props as KeyValueListProps;
+    const items = props.items
+      .map(
+        (item) =>
+          '<div style="display:flex;justify-content:space-between;gap:16px">' +
+          '<dt>' +
+          renderNode(item.label) +
+          '</dt><dd style="margin:0">' +
+          renderNode(item.value) +
+          '</dd></div>',
+      )
+      .join('');
+    return '<dl' + styleAttribute(props.style) + '>' + items + '</dl>';
   }
 
   if (node.type === PageHeader) {

@@ -3,6 +3,11 @@ export { Document, type DocumentProps } from './components/document/document.js'
 export { Heading, type HeadingProps } from './components/heading/heading.js';
 export { Image, type ImageProps } from './components/image/image.js';
 export { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together.js';
+export {
+  KeyValueList,
+  type KeyValueItem,
+  type KeyValueListProps,
+} from './components/key-value-list/key-value-list.js';
 export { Link, type LinkProps } from './components/link/link.js';
 export { PageBreak } from './components/page-break/page-break.js';
 export { PageFooter, type PageFooterProps } from './components/page-footer/page-footer.js';
