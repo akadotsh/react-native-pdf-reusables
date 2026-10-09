@@ -2,6 +2,7 @@ export type PdfStyle = {
   alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
   backgroundColor?: string;
   breakAfter?: 'auto' | 'page';
+  breakInside?: 'auto' | 'avoid';
   borderColor?: string;
   borderRadius?: number;
   borderStyle?: 'solid' | 'dashed' | 'dotted';
@@ -28,6 +29,7 @@ export type PdfStyle = {
   paddingLeft?: number;
   paddingRight?: number;
   paddingTop?: number;
+  pageBreakInside?: 'auto' | 'avoid';
   textAlign?: 'left' | 'center' | 'right';
   width?: number | string;
 };

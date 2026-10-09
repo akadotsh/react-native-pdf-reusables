@@ -4,6 +4,7 @@ import { Divider, type DividerProps } from './components/divider/divider.js';
 import { Document, type DocumentProps } from './components/document/document.js';
 import { Heading, type HeadingProps } from './components/heading/heading.js';
 import { Image, type ImageProps } from './components/image/image.js';
+import { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together.js';
 import { Link, type LinkProps } from './components/link/link.js';
 import { PageBreak } from './components/page-break/page-break.js';
 import { Page, type PageProps, type PageSize } from './components/page/page.js';
@@ -54,6 +55,12 @@ function renderNode(node: ReactNode): string {
   if (node.type === Stack) {
     const props = node.props as StackProps;
     const style = { display: 'flex', flexDirection: 'column', gap: props.gap, ...props.style } satisfies PdfStyle;
+    return '<div' + styleAttribute(style) + '>' + renderChildren(props.children) + '</div>';
+  }
+
+  if (node.type === KeepTogether) {
+    const props = node.props as KeepTogetherProps;
+    const style = { breakInside: 'avoid', pageBreakInside: 'avoid', ...props.style } satisfies PdfStyle;
     return '<div' + styleAttribute(style) + '>' + renderChildren(props.children) + '</div>';
   }
 
