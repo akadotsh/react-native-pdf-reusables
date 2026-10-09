@@ -16,6 +16,7 @@ import { PageBreak } from './components/page-break/page-break.js';
 import { PageFooter, type PageFooterProps } from './components/page-footer/page-footer.js';
 import { PageHeader, type PageHeaderProps } from './components/page-header/page-header.js';
 import { Page, type PageProps, type PageSize } from './components/page/page.js';
+import { Signature, type SignatureProps } from './components/signature/signature.js';
 import { Stack, type StackProps } from './components/stack/stack.js';
 import { Text, type TextProps } from './components/text/text.js';
 import { Totals, type TotalsProps } from './components/totals/totals.js';
@@ -123,6 +124,20 @@ function renderNode(node: ReactNode): string {
   if (node.type === PageFooter) {
     const props = node.props as PageFooterProps;
     return '<footer' + styleAttribute(props.style) + '>' + renderChildren(props.children) + '</footer>';
+  }
+
+  if (node.type === Signature) {
+    const props = node.props as SignatureProps;
+    const style = { breakInside: 'avoid', pageBreakInside: 'avoid', ...props.style } satisfies PdfStyle;
+    return (
+      '<div data-pdf-signature' +
+      styleAttribute(style) +
+      '><div>' +
+      renderChildren(props.children) +
+      '</div><div style="border-top:1px solid currentColor;margin-top:8px;padding-top:4px">' +
+      renderNode(props.label) +
+      '</div></div>'
+    );
   }
 
   if (node.type === Page) {

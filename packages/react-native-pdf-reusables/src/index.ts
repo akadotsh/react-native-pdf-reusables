@@ -18,6 +18,7 @@ export { PageBreak } from './components/page-break/page-break.js';
 export { PageFooter, type PageFooterProps } from './components/page-footer/page-footer.js';
 export { PageHeader, type PageHeaderProps } from './components/page-header/page-header.js';
 export { Page, type PageProps, type PageSize } from './components/page/page.js';
+export { Signature, type SignatureProps } from './components/signature/signature.js';
 export { Stack, type StackProps } from './components/stack/stack.js';
 export { Text, type TextProps } from './components/text/text.js';
 export { Totals, type TotalsProps } from './components/totals/totals.js';
