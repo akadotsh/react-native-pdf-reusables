@@ -7,7 +7,13 @@ documents.
 
 - `Document` and `Page`
 - `Stack`, `Heading`, `Text`, `Image`, `Divider`, and `Link`
-- `renderToHtml`
+- `renderToHtml` and `renderToPdf`
+
+Install the Expo Print backend in the consuming application:
+
+```sh
+npx expo install expo-print
+```
 
 ```tsx
 import {
@@ -19,6 +25,7 @@ import {
   Stack,
   Text,
   renderToHtml,
+  renderToPdf,
 } from 'react-native-pdf-reusables';
 
 const document = (
@@ -35,4 +42,7 @@ const document = (
 );
 
 const html = renderToHtml(document);
+const pdf = await renderToPdf(document);
+
+console.log(pdf.uri, pdf.numberOfPages);
 ```

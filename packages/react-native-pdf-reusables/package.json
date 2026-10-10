@@ -20,7 +20,13 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "peerDependencies": {
+    "expo-print": "*",
     "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "expo-print": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/react": "~19.2.2",

@@ -24,4 +24,5 @@ export { Text, type TextProps } from './components/text/text.js';
 export { Totals, type TotalsProps } from './components/totals/totals.js';
 export { Watermark, type WatermarkProps } from './components/watermark/watermark.js';
 export { renderToHtml } from './render-to-html.js';
+export { renderToPdf, type PdfResult } from './render-to-pdf.js';
 export type { PdfStyle } from './style.js';
