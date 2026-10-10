@@ -226,6 +226,18 @@ export default function PlaygroundScreen() {
         </Pressable>
 
         <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push('./behavior')}
+          style={({ pressed }) => [styles.customize, pressed ? styles.pressed : null]}
+        >
+          <View>
+            <NativeText style={styles.customizeTitle}>PDF behavior</NativeText>
+            <NativeText style={styles.customizeSubtitle}>Multi-page validation preview</NativeText>
+          </View>
+          <NativeText style={styles.editLabel}>Open</NativeText>
+        </Pressable>
+
+        <Pressable
           accessibilityLabel="Generate and preview the component playground PDF"
           accessibilityRole="button"
           disabled={isGenerating}
