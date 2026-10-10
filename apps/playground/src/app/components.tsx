@@ -67,6 +67,8 @@ export default function ComponentsScreen() {
           })}
         </View>
 
+      </ScrollView>
+      <View style={styles.footer}>
         <Pressable
           accessibilityRole="button"
           onPress={() => router.back()}
@@ -74,7 +76,7 @@ export default function ComponentsScreen() {
         >
           <Text style={styles.doneLabel}>Done</Text>
         </Pressable>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -176,6 +178,10 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     minHeight: 52,
+  },
+  footer: {
+    paddingHorizontal: 18,
+    paddingTop: 10,
   },
   doneLabel: {
     color: '#ffffff',
