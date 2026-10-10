@@ -28,7 +28,11 @@ export default function ComponentsScreen() {
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        nestedScrollEnabled
+        style={styles.list}
+      >
         <View style={styles.heading}>
           <Text style={styles.eyebrow}>BUILD YOUR PDF</Text>
           <Text style={styles.title}>Choose components</Text>
@@ -94,6 +98,9 @@ const styles = StyleSheet.create({
   },
   heading: {
     gap: 5,
+  },
+  list: {
+    flex: 1,
   },
   eyebrow: {
     color: '#0080e8',
