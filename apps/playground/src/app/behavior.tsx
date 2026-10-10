@@ -9,17 +9,14 @@ import {
   View,
 } from 'react-native';
 import { renderToHtml, renderToPdf } from 'react-native-pdf-reusables';
-import { WebView } from 'react-native-webview';
 
 import validationMark from '../../assets/validation-mark.svg';
 import { BehaviorDocument } from '../components/behavior-document';
+import { DocumentPreview } from '../components/document-preview';
 
 const localImageUri = NativeImage.resolveAssetSource(validationMark).uri;
 const document = <BehaviorDocument localImageUri={localImageUri} />;
-const previewHtml = renderToHtml(document).replace(
-  '<head>',
-  '<head><meta name="viewport" content="width=794"><style>@media screen{body{background:#d8d5d0;padding:16px}[data-pdf-page]{background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.12);box-sizing:border-box}}</style>',
-);
+const previewHtml = renderToHtml(document);
 
 export default function BehaviorScreen() {
   const [error, setError] = useState<string>();
@@ -65,14 +62,7 @@ export default function BehaviorScreen() {
         <Text accessibilityLiveRegion="polite" style={styles.error}>{error}</Text>
       ) : null}
 
-      <View style={styles.preview}>
-        <WebView
-          allowFileAccess
-          originWhitelist={['*']}
-          source={{ html: previewHtml }}
-          style={styles.webView}
-        />
-      </View>
+      <DocumentPreview html={previewHtml} />
     </View>
   );
 }
@@ -129,15 +119,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     color: '#b91c1c',
     padding: 12,
-  },
-  preview: {
-    borderCurve: 'continuous',
-    borderRadius: 18,
-    flex: 1,
-    overflow: 'hidden',
-  },
-  webView: {
-    backgroundColor: '#d8d5d0',
-    flex: 1,
   },
 });
