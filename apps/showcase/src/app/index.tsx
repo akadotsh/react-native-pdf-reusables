@@ -9,6 +9,7 @@ import {
   KeyValueList,
   Link,
   Page,
+  Signature,
   Stack,
   Text,
   Totals,
@@ -78,6 +79,15 @@ export default function ShowcaseScreen() {
                     { label: 'Total', value: 'INR 1,180' },
                   ]}
                 />
+              </Stack>
+
+              <Stack gap={8}>
+                <Heading level={2} style={{ margin: 0 }}>
+                  Signature
+                </Heading>
+                <Signature label="Authorized signature">
+                  <Text>Akash Prasad</Text>
+                </Signature>
               </Stack>
             </Stack>
           </Page>
