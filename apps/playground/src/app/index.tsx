@@ -179,7 +179,7 @@ export default function PlaygroundScreen() {
             <NativeText style={styles.customizeTitle}>Components</NativeText>
             <NativeText style={styles.customizeSubtitle}>{selectedCount} selected</NativeText>
           </View>
-          <NativeText style={styles.chevron}>›</NativeText>
+          <NativeText style={styles.editLabel}>Edit</NativeText>
         </Pressable>
 
         <Pressable
@@ -220,7 +220,7 @@ export default function PlaygroundScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#f2f0ec',
     flexGrow: 1,
     gap: 28,
     justifyContent: 'center',
@@ -233,30 +233,28 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   eyebrow: {
-    color: '#2457d6',
+    color: '#0080e8',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '500',
     letterSpacing: 1.4,
   },
   title: {
-    color: '#0f172a',
+    color: '#474645',
     fontSize: 32,
-    fontWeight: '700',
+    fontWeight: '500',
     lineHeight: 38,
   },
   subtitle: {
-    color: '#64748b',
+    color: '#7a7876',
     fontSize: 16,
     lineHeight: 24,
   },
   card: {
     alignSelf: 'center',
     backgroundColor: '#ffffff',
-    borderColor: '#e2e8f0',
     borderCurve: 'continuous',
     borderRadius: 24,
-    borderWidth: 1,
-    boxShadow: '0 12px 32px rgba(15, 23, 42, 0.08)',
+    boxShadow: '0 10px 28px rgba(71, 70, 69, 0.08)',
     gap: 20,
     maxWidth: 560,
     padding: 20,
@@ -269,7 +267,7 @@ const styles = StyleSheet.create({
   },
   documentBadge: {
     alignItems: 'center',
-    backgroundColor: '#e8eeff',
+    backgroundColor: '#e3f2fd',
     borderCurve: 'continuous',
     borderRadius: 14,
     height: 48,
@@ -277,9 +275,9 @@ const styles = StyleSheet.create({
     width: 48,
   },
   documentBadgeText: {
-    color: '#2457d6',
+    color: '#0080e8',
     fontSize: 12,
-    fontWeight: '800',
+    fontWeight: '500',
     letterSpacing: 0.5,
   },
   cardHeading: {
@@ -287,12 +285,12 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   cardTitle: {
-    color: '#0f172a',
+    color: '#474645',
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   cardSubtitle: {
-    color: '#64748b',
+    color: '#7a7876',
   },
   tags: {
     flexDirection: 'row',
@@ -300,18 +298,18 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tag: {
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#f2f0ec',
     borderCurve: 'continuous',
     borderRadius: 999,
-    color: '#475569',
+    color: '#7a7876',
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '500',
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
   customize: {
     alignItems: 'center',
-    backgroundColor: '#f2f2f7',
+    backgroundColor: '#f2f0ec',
     borderRadius: 14,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -320,25 +318,24 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
   },
   customizeTitle: {
-    color: '#1c1c1e',
+    color: '#474645',
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   customizeSubtitle: {
-    color: '#6c6c70',
+    color: '#7a7876',
     fontSize: 13,
     fontVariant: ['tabular-nums'],
     marginTop: 2,
   },
-  chevron: {
-    color: '#8e8e93',
-    fontSize: 28,
-    fontWeight: '400',
-    transform: [{ translateY: -1 }],
+  editLabel: {
+    color: '#0080e8',
+    fontSize: 15,
+    fontWeight: '500',
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#007aff',
+    backgroundColor: '#0080e8',
     borderCurve: 'continuous',
     borderRadius: 14,
     justifyContent: 'center',
@@ -359,7 +356,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#ffffff',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '500',
   },
   success: {
     backgroundColor: '#ecfdf3',
@@ -384,7 +381,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignSelf: 'center',
-    color: '#94a3b8',
+    color: '#7a7876',
     fontSize: 13,
     maxWidth: 560,
     textAlign: 'center',
