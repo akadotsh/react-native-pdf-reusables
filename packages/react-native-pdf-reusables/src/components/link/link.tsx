@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 
-import type { PdfStyle } from '../../style.js';
+import type { PdfStyleProp } from '../../style.js';
 
 export type LinkProps = {
   children?: ReactNode;
   href: string;
-  style?: PdfStyle;
+  style?: PdfStyleProp;
 };
 
 export function Link(_props: LinkProps) {

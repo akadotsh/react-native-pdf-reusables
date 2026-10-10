@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 
-import type { PdfStyle } from '../../style.js';
+import type { PdfStyleProp } from '../../style.js';
 
 export type PageHeaderProps = {
   children?: ReactNode;
-  style?: PdfStyle;
+  style?: PdfStyleProp;
 };
 
 export function PageHeader(_props: PageHeaderProps) {

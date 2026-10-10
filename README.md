@@ -13,5 +13,5 @@ Source-owned, customizable PDF components for React Native and Expo.
 
 - `Document` and `Page`
 - `Stack`, `Heading`, `Text`, `Image`, `Divider`, and `Link`
-- Typed printable styles
+- Themeable typed styles and custom fonts
 - HTML serialization and Expo PDF generation

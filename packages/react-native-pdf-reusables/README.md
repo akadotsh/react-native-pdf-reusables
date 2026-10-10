@@ -24,20 +24,41 @@ import {
   Page,
   Stack,
   Text,
+  ThemeProvider,
+  registerFont,
   renderToHtml,
   renderToPdf,
 } from 'react-native-pdf-reusables';
 
+registerFont({
+  family: 'Inter',
+  src: 'data:font/woff2;base64,...',
+  weight: 400,
+});
+
 const document = (
   <Document title="Invoice">
-    <Page>
-      <Stack gap={12} style={{ padding: 24 }}>
-        <Heading>Invoice</Heading>
-        <Text>INV-1042</Text>
-        <Divider />
-        <Link href="https://example.com">View online</Link>
-      </Stack>
-    </Page>
+    <ThemeProvider
+      tokens={{
+        colors: { accent: '#2457d6' },
+        fonts: { body: 'Inter' },
+        spacing: { page: 24 },
+      }}
+    >
+      <Page
+        style={({ fonts, spacing }) => ({
+          fontFamily: fonts.body,
+          paddingHorizontal: spacing.page,
+        })}
+      >
+        <Stack gap={12}>
+          <Heading style={({ colors }) => ({ color: colors.accent })}>Invoice</Heading>
+          <Text>INV-1042</Text>
+          <Divider />
+          <Link href="https://example.com">View online</Link>
+        </Stack>
+      </Page>
+    </ThemeProvider>
   </Document>
 );
 
@@ -46,3 +67,6 @@ const pdf = await renderToPdf(document);
 
 console.log(pdf.uri, pdf.numberOfPages);
 ```
+
+Font sources may be remote URLs or data URIs. A later registration with the
+same family, style, and weight replaces the earlier one.

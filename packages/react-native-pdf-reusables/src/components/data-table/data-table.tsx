@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { PdfStyle } from '../../style.js';
+import type { PdfStyleProp } from '../../style.js';
 
 export type DataTableColumn<Row> = {
   header: ReactNode;
@@ -8,12 +8,12 @@ export type DataTableColumn<Row> = {
 };
 
 export type DataTableProps<Row> = {
-  cellStyle?: PdfStyle;
+  cellStyle?: PdfStyleProp;
   columns: readonly DataTableColumn<Row>[];
-  headerStyle?: PdfStyle;
+  headerStyle?: PdfStyleProp;
   repeatHeader?: boolean;
   rows: readonly Row[];
-  style?: PdfStyle;
+  style?: PdfStyleProp;
 };
 
 export function DataTable<Row>(_props: DataTableProps<Row>) {

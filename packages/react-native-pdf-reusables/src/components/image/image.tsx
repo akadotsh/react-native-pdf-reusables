@@ -1,9 +1,9 @@
-import type { PdfStyle } from '../../style.js';
+import type { PdfStyleProp } from '../../style.js';
 
 export type ImageProps = {
   alt?: string;
   src: string;
-  style?: PdfStyle;
+  style?: PdfStyleProp;
 };
 
 export function Image(_props: ImageProps) {

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { PdfStyle } from '../../style.js';
+import type { PdfStyleProp } from '../../style.js';
 
 export type KeyValueItem = {
   label: ReactNode;
@@ -9,7 +9,7 @@ export type KeyValueItem = {
 
 export type KeyValueListProps = {
   items: readonly KeyValueItem[];
-  style?: PdfStyle;
+  style?: PdfStyleProp;
 };
 
 export function KeyValueList(_props: KeyValueListProps) {

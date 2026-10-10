@@ -1,7 +1,7 @@
-import type { PdfStyle } from '../../style.js';
+import type { PdfStyleProp } from '../../style.js';
 
 export type DividerProps = {
-  style?: PdfStyle;
+  style?: PdfStyleProp;
 };
 
 export function Divider(_props: DividerProps) {
