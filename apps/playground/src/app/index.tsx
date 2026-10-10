@@ -1,4 +1,3 @@
-import * as Print from 'expo-print';
 import { router } from 'expo-router';
 import { useState, type PropsWithChildren } from 'react';
 import {
@@ -28,11 +27,13 @@ import {
   ThemeProvider,
   Totals,
   Watermark,
+  renderToHtml,
   renderToPdf,
   type PdfResult,
 } from 'react-native-pdf-reusables';
 
 import { useComponentSelection } from '../components/component-selection';
+import { usePdfPreview } from '../components/pdf-preview-context';
 
 const documentIcon =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMyNDU3ZDYiLz48cGF0aCBkPSJNMTggMTZoMjBsOCA4djI0SDE4eiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzggMTZ2MTBoOCIgZmlsbD0iI2I5Y2NmZiIvPjwvc3ZnPg==';
@@ -52,6 +53,7 @@ export default function PlaygroundScreen() {
   const [error, setError] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
   const { selected } = useComponentSelection();
+  const { setPreview } = usePdfPreview();
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
   async function generateAndPreview() {
@@ -60,7 +62,7 @@ export default function PlaygroundScreen() {
     setIsGenerating(true);
 
     try {
-      const pdf = await renderToPdf(
+      const document = (
         <Document title="PDF Reusables Playground">
           <PreviewTheme enabled={selected.theme}>
           <Page
@@ -173,11 +175,14 @@ export default function PlaygroundScreen() {
             ) : null}
           </Page>
           </PreviewTheme>
-        </Document>,
+        </Document>
       );
+      const html = renderToHtml(document);
+      const pdf = await renderToPdf(document);
 
       setResult(pdf);
-      await Print.printAsync({ uri: pdf.uri });
+      setPreview({ html, numberOfPages: pdf.numberOfPages, uri: pdf.uri });
+      router.push('./preview');
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'PDF generation failed');
     } finally {
