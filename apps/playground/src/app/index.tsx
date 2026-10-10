@@ -1,6 +1,14 @@
 import * as Print from 'expo-print';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text as NativeText, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text as NativeText,
+  View,
+} from 'react-native';
 import {
   Divider,
   Document,
@@ -17,6 +25,11 @@ import {
   type PdfResult,
 } from 'react-native-pdf-reusables';
 
+import {
+  ComponentPickerSheet,
+  type OptionalComponent,
+} from '../components/component-picker-sheet';
+
 const documentIcon =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMyNDU3ZDYiLz48cGF0aCBkPSJNMTggMTZoMjBsOCA4djI0SDE4eiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzggMTZ2MTBoOCIgZmlsbD0iI2I5Y2NmZiIvPjwvc3ZnPg==';
 
@@ -24,6 +37,16 @@ export default function PlaygroundScreen() {
   const [result, setResult] = useState<PdfResult>();
   const [error, setError] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [selected, setSelected] = useState<Record<OptionalComponent, boolean>>({
+    details: true,
+    signature: true,
+    totals: true,
+  });
+
+  function toggleComponent(component: OptionalComponent) {
+    setSelected((current) => ({ ...current, [component]: !current[component] }));
+  }
 
   async function generateAndPreview() {
     setError(undefined);
@@ -58,7 +81,7 @@ export default function PlaygroundScreen() {
                 </Link>
               </Stack>
 
-              <Stack gap={8}>
+              {selected.details ? <Stack gap={8}>
                 <Heading level={2} style={{ margin: 0 }}>
                   Key-value list
                 </Heading>
@@ -69,9 +92,9 @@ export default function PlaygroundScreen() {
                     { label: 'Date', value: '10 October 2026' },
                   ]}
                 />
-              </Stack>
+              </Stack> : null}
 
-              <Stack gap={8}>
+              {selected.totals ? <Stack gap={8}>
                 <Heading level={2} style={{ margin: 0 }}>
                   Totals
                 </Heading>
@@ -82,16 +105,16 @@ export default function PlaygroundScreen() {
                     { label: 'Total', value: 'INR 1,180' },
                   ]}
                 />
-              </Stack>
+              </Stack> : null}
 
-              <Stack gap={8}>
+              {selected.signature ? <Stack gap={8}>
                 <Heading level={2} style={{ margin: 0 }}>
                   Signature
                 </Heading>
                 <Signature label="Authorized signature">
                   <Text>Akash Prasad</Text>
                 </Signature>
-              </Stack>
+              </Stack> : null}
             </Stack>
           </Page>
         </Document>,
@@ -107,7 +130,8 @@ export default function PlaygroundScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container} contentInsetAdjustmentBehavior="automatic">
+    <>
+      <ScrollView contentContainerStyle={styles.container} contentInsetAdjustmentBehavior="automatic">
       <View style={styles.hero}>
         <NativeText style={styles.eyebrow}>ON-DEVICE PDF</NativeText>
         <NativeText style={styles.title}>Printable documents, built from reusable components.</NativeText>
@@ -133,6 +157,8 @@ export default function PlaygroundScreen() {
           <NativeText style={styles.tag}>Data</NativeText>
           <NativeText style={styles.tag}>Signature</NativeText>
         </View>
+
+        <Button title="Customize components" onPress={() => setIsPickerOpen(true)} />
 
         <Pressable
           accessibilityLabel="Generate and preview the component playground PDF"
@@ -162,7 +188,15 @@ export default function PlaygroundScreen() {
       </View>
 
       <NativeText style={styles.footer}>No server upload. Your document stays on this device.</NativeText>
-    </ScrollView>
+      </ScrollView>
+
+      <ComponentPickerSheet
+        onClose={() => setIsPickerOpen(false)}
+        onToggle={toggleComponent}
+        selected={selected}
+        visible={isPickerOpen}
+      />
+    </>
   );
 }
 
