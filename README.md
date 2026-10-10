@@ -15,3 +15,9 @@ Source-owned, customizable PDF components for React Native and Expo.
 - `Stack`, `Heading`, `Text`, `Image`, `Divider`, and `Link`
 - Themeable typed styles and custom fonts
 - HTML serialization and Expo PDF generation
+
+## Local showcase
+
+Run the native validation app with Expo Go:
+
+    pnpm --filter pdf-reusables-showcase start
