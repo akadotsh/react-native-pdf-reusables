@@ -82,6 +82,7 @@ export default function ComponentsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     backgroundColor: '#f2f0ec',
+    flex: 1,
   },
   container: {
     gap: 18,

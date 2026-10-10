@@ -13,9 +13,11 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: '#f2f0ec' },
             headerShown: false,
             presentation: 'formSheet',
-            sheetAllowedDetents: 'fitToContents',
+            sheetAllowedDetents: [0.65, 0.9],
             sheetCornerRadius: 28,
+            sheetExpandsWhenScrolledToEdge: false,
             sheetGrabberVisible: true,
+            sheetInitialDetentIndex: 0,
           }}
         />
       </Stack>
