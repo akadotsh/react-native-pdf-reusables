@@ -20,7 +20,7 @@ import {
 const documentIcon =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMyNDU3ZDYiLz48cGF0aCBkPSJNMTggMTZoMjBsOCA4djI0SDE4eiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzggMTZ2MTBoOCIgZmlsbD0iI2I5Y2NmZiIvPjwvc3ZnPg==';
 
-export default function ShowcaseScreen() {
+export default function PlaygroundScreen() {
   const [result, setResult] = useState<PdfResult>();
   const [error, setError] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -32,7 +32,7 @@ export default function ShowcaseScreen() {
 
     try {
       const pdf = await renderToPdf(
-        <Document title="PDF Reusables Showcase">
+        <Document title="PDF Reusables Playground">
           <Page size="A4" style={{ padding: 32 }}>
             <Stack gap={24}>
               <Stack gap={4}>
@@ -112,7 +112,7 @@ export default function ShowcaseScreen() {
         <NativeText style={styles.eyebrow}>ON-DEVICE PDF</NativeText>
         <NativeText style={styles.title}>Printable documents, built from reusable components.</NativeText>
         <NativeText style={styles.subtitle}>
-          Generate the showcase locally, then inspect the finished PDF in the native print preview.
+          Build a document locally, then inspect the finished PDF in the native print preview.
         </NativeText>
       </View>
 
@@ -122,7 +122,7 @@ export default function ShowcaseScreen() {
             <NativeText style={styles.documentBadgeText}>PDF</NativeText>
           </View>
           <View style={styles.cardHeading}>
-            <NativeText style={styles.cardTitle}>Component showcase</NativeText>
+            <NativeText style={styles.cardTitle}>Component playground</NativeText>
             <NativeText style={styles.cardSubtitle}>A4 · Generated locally</NativeText>
           </View>
         </View>
@@ -135,7 +135,7 @@ export default function ShowcaseScreen() {
         </View>
 
         <Pressable
-          accessibilityLabel="Generate and preview the component showcase PDF"
+          accessibilityLabel="Generate and preview the component playground PDF"
           accessibilityRole="button"
           disabled={isGenerating}
           onPress={generateAndPreview}

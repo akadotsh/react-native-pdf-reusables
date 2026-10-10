@@ -16,8 +16,8 @@ Source-owned, customizable PDF components for React Native and Expo.
 - Themeable typed styles and custom fonts
 - HTML serialization and Expo PDF generation
 
-## Local showcase
+## Local playground
 
 Run the native validation app with Expo Go:
 
-    pnpm --filter pdf-reusables-showcase start
+    pnpm --filter pdf-reusables-playground start

@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "PDF Reusables Showcase",
-    "slug": "pdf-reusables-showcase",
+    "name": "PDF Reusables Playground",
+    "slug": "pdf-reusables-playground",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "pdf-reusables-showcase",
+    "scheme": "pdf-reusables-playground",
     "userInterfaceStyle": "automatic",
     "experiments": {
       "typedRoutes": true
