@@ -6,6 +6,7 @@ import {
   Document,
   Heading,
   Image,
+  Link,
   Page,
   Stack,
   Text,
@@ -46,6 +47,9 @@ export default function ShowcaseScreen() {
                 <Text>
                   Text, headings, and vertical stacks provide the foundation for structured PDF documents.
                 </Text>
+                <Link href="https://github.com/akadotsh/react-native-pdf-reusables" style={{ color: '#2457d6' }}>
+                  View the project source
+                </Link>
               </Stack>
             </Stack>
           </Page>
