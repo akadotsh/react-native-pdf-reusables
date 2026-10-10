@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "PDF Reusables Showcase",
+    "slug": "pdf-reusables-showcase",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "pdf-reusables-showcase",
+    "userInterfaceStyle": "automatic",
+    "experiments": {
+      "typedRoutes": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar"
+    ]
+  }
+}

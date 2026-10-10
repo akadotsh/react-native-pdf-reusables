@@ -4,8 +4,8 @@
   "packageManager": "pnpm@10.7.0",
   "scripts": {
     "build": "pnpm --filter react-native-pdf-reusables build",
-    "lint": "eslint packages",
-    "typecheck": "pnpm --filter react-native-pdf-reusables typecheck"
+    "lint": "eslint packages apps",
+    "typecheck": "pnpm --recursive --if-present typecheck"
   },
   "devDependencies": {
     "eslint": "^9.0.0",
