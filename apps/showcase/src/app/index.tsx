@@ -11,6 +11,7 @@ import {
   Page,
   Stack,
   Text,
+  Totals,
   renderToPdf,
   type PdfResult,
 } from 'react-native-pdf-reusables';
@@ -62,6 +63,19 @@ export default function ShowcaseScreen() {
                     { label: 'Invoice', value: 'INV-1042' },
                     { label: 'Customer', value: 'Acme & Partners' },
                     { label: 'Date', value: '10 October 2026' },
+                  ]}
+                />
+              </Stack>
+
+              <Stack gap={8}>
+                <Heading level={2} style={{ margin: 0 }}>
+                  Totals
+                </Heading>
+                <Totals
+                  items={[
+                    { label: 'Subtotal', value: 'INR 1,000' },
+                    { label: 'Tax', value: 'INR 180' },
+                    { label: 'Total', value: 'INR 1,180' },
                   ]}
                 />
               </Stack>
