@@ -1,4 +1,5 @@
 import * as Print from 'expo-print';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import {
+  DataTable,
   Divider,
   Document,
   Heading,
@@ -24,10 +26,7 @@ import {
   type PdfResult,
 } from 'react-native-pdf-reusables';
 
-import {
-  ComponentPickerSheet,
-  type OptionalComponent,
-} from '../components/component-picker-sheet';
+import { useComponentSelection } from '../components/component-selection';
 
 const documentIcon =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMyNDU3ZDYiLz48cGF0aCBkPSJNMTggMTZoMjBsOCA4djI0SDE4eiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzggMTZ2MTBoOCIgZmlsbD0iI2I5Y2NmZiIvPjwvc3ZnPg==';
@@ -36,17 +35,8 @@ export default function PlaygroundScreen() {
   const [result, setResult] = useState<PdfResult>();
   const [error, setError] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
-  const [selected, setSelected] = useState<Record<OptionalComponent, boolean>>({
-    details: true,
-    signature: true,
-    totals: true,
-  });
+  const { selected } = useComponentSelection();
   const selectedCount = Object.values(selected).filter(Boolean).length;
-
-  function toggleComponent(component: OptionalComponent) {
-    setSelected((current) => ({ ...current, [component]: !current[component] }));
-  }
 
   async function generateAndPreview() {
     setError(undefined);
@@ -60,13 +50,17 @@ export default function PlaygroundScreen() {
             <Stack gap={24}>
               <Stack gap={4}>
                 <Stack gap={12} style={{ alignItems: 'center', flexDirection: 'row' }}>
-                  <Image alt="Document icon" src={documentIcon} style={{ height: 48, width: 48 }} />
+                  {selected.image ? (
+                    <Image alt="Document icon" src={documentIcon} style={{ height: 48, width: 48 }} />
+                  ) : null}
                   <Stack gap={4}>
                     <Heading style={{ margin: 0 }}>Basic components</Heading>
                     <Text style={{ color: '#475569' }}>A printable component gallery generated on your device.</Text>
                   </Stack>
                 </Stack>
-                <Divider style={{ borderColor: '#cbd5e1', borderWidth: 1 }} />
+                {selected.divider ? (
+                  <Divider style={{ borderColor: '#cbd5e1', borderWidth: 1 }} />
+                ) : null}
               </Stack>
 
               <Stack gap={8}>
@@ -76,9 +70,11 @@ export default function PlaygroundScreen() {
                 <Text>
                   Text, headings, and vertical stacks provide the foundation for structured PDF documents.
                 </Text>
-                <Link href="https://github.com/akadotsh/react-native-pdf-reusables" style={{ color: '#2457d6' }}>
-                  View the project source
-                </Link>
+                {selected.link ? (
+                  <Link href="https://github.com/akadotsh/react-native-pdf-reusables" style={{ color: '#2457d6' }}>
+                    View the project source
+                  </Link>
+                ) : null}
               </Stack>
 
               {selected.details ? <Stack gap={8}>
@@ -107,6 +103,23 @@ export default function PlaygroundScreen() {
                 />
               </Stack> : null}
 
+              {selected.table ? <Stack gap={8}>
+                <Heading level={2} style={{ margin: 0 }}>
+                  Data table
+                </Heading>
+                <DataTable
+                  columns={[
+                    { header: 'Item', render: (row) => row.item },
+                    { header: 'Quantity', render: (row) => row.quantity },
+                    { header: 'Amount', render: (row) => row.amount },
+                  ]}
+                  rows={[
+                    { amount: 'INR 800', item: 'Consulting', quantity: '2 hours' },
+                    { amount: 'INR 200', item: 'Report', quantity: '1' },
+                  ]}
+                />
+              </Stack> : null}
+
               {selected.signature ? <Stack gap={8}>
                 <Heading level={2} style={{ margin: 0 }}>
                   Signature
@@ -130,8 +143,7 @@ export default function PlaygroundScreen() {
   }
 
   return (
-    <>
-      <ScrollView contentContainerStyle={styles.container} contentInsetAdjustmentBehavior="automatic">
+    <ScrollView contentContainerStyle={styles.container} contentInsetAdjustmentBehavior="automatic">
       <View style={styles.hero}>
         <NativeText style={styles.eyebrow}>ON-DEVICE PDF</NativeText>
         <NativeText style={styles.title}>Printable documents, built from reusable components.</NativeText>
@@ -160,7 +172,7 @@ export default function PlaygroundScreen() {
 
         <Pressable
           accessibilityRole="button"
-          onPress={() => setIsPickerOpen(true)}
+          onPress={() => router.push('./components')}
           style={({ pressed }) => [styles.customize, pressed ? styles.pressed : null]}
         >
           <View>
@@ -202,15 +214,7 @@ export default function PlaygroundScreen() {
       </View>
 
       <NativeText style={styles.footer}>No server upload. Your document stays on this device.</NativeText>
-      </ScrollView>
-
-      <ComponentPickerSheet
-        onClose={() => setIsPickerOpen(false)}
-        onToggle={toggleComponent}
-        selected={selected}
-        visible={isPickerOpen}
-      />
-    </>
+    </ScrollView>
   );
 }
 
@@ -345,8 +349,7 @@ const styles = StyleSheet.create({
     opacity: 0.65,
   },
   pressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.96 }],
+    opacity: 0.68,
   },
   buttonContent: {
     alignItems: 'center',
