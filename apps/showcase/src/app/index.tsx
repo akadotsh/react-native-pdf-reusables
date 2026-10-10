@@ -6,6 +6,7 @@ import {
   Document,
   Heading,
   Image,
+  KeyValueList,
   Link,
   Page,
   Stack,
@@ -50,6 +51,19 @@ export default function ShowcaseScreen() {
                 <Link href="https://github.com/akadotsh/react-native-pdf-reusables" style={{ color: '#2457d6' }}>
                   View the project source
                 </Link>
+              </Stack>
+
+              <Stack gap={8}>
+                <Heading level={2} style={{ margin: 0 }}>
+                  Key-value list
+                </Heading>
+                <KeyValueList
+                  items={[
+                    { label: 'Invoice', value: 'INV-1042' },
+                    { label: 'Customer', value: 'Acme & Partners' },
+                    { label: 'Date', value: '10 October 2026' },
+                  ]}
+                />
               </Stack>
             </Stack>
           </Page>
