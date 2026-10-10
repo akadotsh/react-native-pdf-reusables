@@ -5,6 +5,7 @@ import {
   Document,
   Heading,
   Page,
+  Stack,
   Text,
   renderToPdf,
   type PdfResult,
@@ -21,8 +22,21 @@ export default function ShowcaseScreen() {
       const pdf = await renderToPdf(
         <Document title="PDF Reusables Showcase">
           <Page size="A4" style={{ padding: 32 }}>
-            <Heading>PDF Reusables</Heading>
-            <Text>This PDF was generated on your device.</Text>
+            <Stack gap={24}>
+              <Stack gap={4}>
+                <Heading style={{ margin: 0 }}>Basic components</Heading>
+                <Text style={{ color: '#475569' }}>A printable component gallery generated on your device.</Text>
+              </Stack>
+
+              <Stack gap={8}>
+                <Heading level={2} style={{ margin: 0 }}>
+                  Typography and layout
+                </Heading>
+                <Text>
+                  Text, headings, and vertical stacks provide the foundation for structured PDF documents.
+                </Text>
+              </Stack>
+            </Stack>
           </Page>
         </Document>,
       );
@@ -36,7 +50,7 @@ export default function ShowcaseScreen() {
 
   return (
     <View style={styles.container}>
-      <NativeText style={styles.title}>Native PDF preview</NativeText>
+      <NativeText style={styles.title}>Basic components</NativeText>
       <Button title="Generate and preview PDF" onPress={generateAndPreview} />
       {result ? <NativeText>{result.numberOfPages} page generated</NativeText> : null}
       {error ? <NativeText style={styles.error}>{error}</NativeText> : null}
