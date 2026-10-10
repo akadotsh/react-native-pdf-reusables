@@ -1,6 +1,6 @@
 import * as Print from 'expo-print';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useState, type PropsWithChildren } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -15,13 +15,19 @@ import {
   Document,
   Heading,
   Image,
+  KeepTogether,
   KeyValueList,
   Link,
   Page,
+  PageBreak,
+  PageFooter,
+  PageHeader,
   Signature,
   Stack,
   Text,
+  ThemeProvider,
   Totals,
+  Watermark,
   renderToPdf,
   type PdfResult,
 } from 'react-native-pdf-reusables';
@@ -30,6 +36,16 @@ import { useComponentSelection } from '../components/component-selection';
 
 const documentIcon =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMyNDU3ZDYiLz48cGF0aCBkPSJNMTggMTZoMjBsOCA4djI0SDE4eiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzggMTZ2MTBoOCIgZmlsbD0iI2I5Y2NmZiIvPjwvc3ZnPg==';
+
+function PreviewTheme({ children, enabled }: PropsWithChildren<{ enabled: boolean }>) {
+  if (!enabled) return children;
+
+  return (
+    <ThemeProvider tokens={{ colors: { accent: '#0080e8', ink: '#474645' } }}>
+      {children}
+    </ThemeProvider>
+  );
+}
 
 export default function PlaygroundScreen() {
   const [result, setResult] = useState<PdfResult>();
@@ -46,7 +62,19 @@ export default function PlaygroundScreen() {
     try {
       const pdf = await renderToPdf(
         <Document title="PDF Reusables Playground">
-          <Page size="A4" style={{ padding: 32 }}>
+          <PreviewTheme enabled={selected.theme}>
+          <Page
+            size="A4"
+            style={(theme) => ({ color: theme.colors.ink ?? '#0f172a', padding: 32 })}
+          >
+            {selected.watermark ? (
+              <Watermark style={{ fontSize: 56, fontWeight: 'bold' }}>DRAFT</Watermark>
+            ) : null}
+            {selected.header ? (
+              <PageHeader style={{ borderBottomColor: '#d6d3d1', borderBottomWidth: 1, marginBottom: 20, paddingBottom: 8 }}>
+                <Text>PDF Reusables · Component preview</Text>
+              </PageHeader>
+            ) : null}
             <Stack gap={24}>
               <Stack gap={4}>
                 <Stack gap={12} style={{ alignItems: 'center', flexDirection: 'row' }}>
@@ -120,6 +148,15 @@ export default function PlaygroundScreen() {
                 />
               </Stack> : null}
 
+              {selected.keepTogether ? (
+                <KeepTogether style={{ backgroundColor: '#f2f0ec', borderRadius: 8, padding: 12 }}>
+                  <Heading level={2} style={{ margin: 0 }}>Keep together</Heading>
+                  <Text>This heading and paragraph avoid splitting across pages.</Text>
+                </KeepTogether>
+              ) : null}
+
+              {selected.pageBreak ? <PageBreak /> : null}
+
               {selected.signature ? <Stack gap={8}>
                 <Heading level={2} style={{ margin: 0 }}>
                   Signature
@@ -129,7 +166,13 @@ export default function PlaygroundScreen() {
                 </Signature>
               </Stack> : null}
             </Stack>
+            {selected.footer ? (
+              <PageFooter style={{ borderTopColor: '#d6d3d1', borderTopWidth: 1, marginTop: 20, paddingTop: 8 }}>
+                <Text style={{ color: '#78716c', fontSize: 10 }}>Generated locally with react-native-pdf-reusables</Text>
+              </PageFooter>
+            ) : null}
           </Page>
+          </PreviewTheme>
         </Document>,
       );
 

@@ -15,6 +15,12 @@ const options: { key: OptionalComponent; label: string }[] = [
   { key: 'table', label: 'Data table' },
   { key: 'totals', label: 'Totals' },
   { key: 'signature', label: 'Signature' },
+  { key: 'keepTogether', label: 'Keep together' },
+  { key: 'header', label: 'Page header' },
+  { key: 'footer', label: 'Page footer' },
+  { key: 'watermark', label: 'Watermark' },
+  { key: 'pageBreak', label: 'Page break' },
+  { key: 'theme', label: 'Theme provider' },
 ];
 
 export default function ComponentsScreen() {

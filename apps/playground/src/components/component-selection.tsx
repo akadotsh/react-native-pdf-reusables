@@ -3,20 +3,32 @@ import { createContext, useContext, useState, type PropsWithChildren } from 'rea
 export type OptionalComponent =
   | 'details'
   | 'divider'
+  | 'footer'
+  | 'header'
   | 'image'
+  | 'keepTogether'
   | 'link'
+  | 'pageBreak'
   | 'signature'
   | 'table'
-  | 'totals';
+  | 'theme'
+  | 'totals'
+  | 'watermark';
 
 const initialSelection: Record<OptionalComponent, boolean> = {
   details: true,
   divider: true,
+  footer: true,
+  header: true,
   image: true,
+  keepTogether: true,
   link: true,
+  pageBreak: false,
   signature: true,
   table: true,
+  theme: true,
   totals: true,
+  watermark: false,
 };
 
 type ComponentSelection = {
