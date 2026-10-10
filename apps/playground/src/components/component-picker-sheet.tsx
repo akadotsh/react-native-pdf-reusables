@@ -1,4 +1,5 @@
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, Easing, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export type OptionalComponent = 'details' | 'signature' | 'totals';
@@ -17,16 +18,60 @@ type ComponentPickerSheetProps = {
 };
 
 export function ComponentPickerSheet({ onClose, onToggle, selected, visible }: ComponentPickerSheetProps) {
+  const [isMounted, setIsMounted] = useState(visible);
+  const backdropOpacity = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const sheetOffset = useRef(new Animated.Value(visible ? 0 : 16)).current;
+
+  useEffect(() => {
+    if (visible) {
+      setIsMounted(true);
+      Animated.parallel([
+        Animated.timing(backdropOpacity, {
+          duration: 100,
+          easing: Easing.out(Easing.cubic),
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+        Animated.timing(sheetOffset, {
+          duration: 210,
+          easing: Easing.out(Easing.cubic),
+          toValue: 0,
+          useNativeDriver: true,
+        }),
+      ]).start();
+      return;
+    }
+
+    Animated.parallel([
+      Animated.timing(backdropOpacity, {
+        duration: 80,
+        easing: Easing.out(Easing.cubic),
+        toValue: 0,
+        useNativeDriver: true,
+      }),
+      Animated.timing(sheetOffset, {
+        duration: 140,
+        easing: Easing.out(Easing.cubic),
+        toValue: 16,
+        useNativeDriver: true,
+      }),
+    ]).start(({ finished }) => {
+      if (finished) setIsMounted(false);
+    });
+  }, [backdropOpacity, sheetOffset, visible]);
+
   return (
-    <Modal animationType="slide" onRequestClose={onClose} transparent visible={visible}>
+    <Modal animationType="none" onRequestClose={onClose} transparent visible={isMounted}>
       <View style={styles.modal}>
+        <Animated.View pointerEvents="none" style={[styles.backdrop, { opacity: backdropOpacity }]} />
         <Pressable
           accessibilityLabel="Close component picker"
           accessibilityRole="button"
           onPress={onClose}
           style={StyleSheet.absoluteFill}
         />
-        <SafeAreaView edges={['bottom']} style={styles.sheet}>
+        <Animated.View style={{ transform: [{ translateY: sheetOffset }] }}>
+          <SafeAreaView edges={['bottom']} style={styles.sheet}>
           <View style={styles.handle} />
           <Text style={styles.title}>Choose components</Text>
           <Text style={styles.subtitle}>Included components appear in the generated PDF.</Text>
@@ -53,7 +98,8 @@ export function ComponentPickerSheet({ onClose, onToggle, selected, visible }: C
           >
             <Text style={styles.doneLabel}>Done</Text>
           </Pressable>
-        </SafeAreaView>
+          </SafeAreaView>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -61,9 +107,16 @@ export function ComponentPickerSheet({ onClose, onToggle, selected, visible }: C
 
 const styles = StyleSheet.create({
   modal: {
-    backgroundColor: 'rgba(15, 23, 42, 0.35)',
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.22)',
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   sheet: {
     backgroundColor: '#f2f2f7',
