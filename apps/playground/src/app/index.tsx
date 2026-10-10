@@ -2,7 +2,6 @@ import * as Print from 'expo-print';
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Button,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -43,6 +42,7 @@ export default function PlaygroundScreen() {
     signature: true,
     totals: true,
   });
+  const selectedCount = Object.values(selected).filter(Boolean).length;
 
   function toggleComponent(component: OptionalComponent) {
     setSelected((current) => ({ ...current, [component]: !current[component] }));
@@ -158,14 +158,28 @@ export default function PlaygroundScreen() {
           <NativeText style={styles.tag}>Signature</NativeText>
         </View>
 
-        <Button title="Customize components" onPress={() => setIsPickerOpen(true)} />
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => setIsPickerOpen(true)}
+          style={({ pressed }) => [styles.customize, pressed ? styles.pressed : null]}
+        >
+          <View>
+            <NativeText style={styles.customizeTitle}>Components</NativeText>
+            <NativeText style={styles.customizeSubtitle}>{selectedCount} selected</NativeText>
+          </View>
+          <NativeText style={styles.chevron}>›</NativeText>
+        </Pressable>
 
         <Pressable
           accessibilityLabel="Generate and preview the component playground PDF"
           accessibilityRole="button"
           disabled={isGenerating}
           onPress={generateAndPreview}
-          style={[styles.button, isGenerating ? styles.buttonDisabled : null]}
+          style={({ pressed }) => [
+            styles.button,
+            isGenerating ? styles.buttonDisabled : null,
+            pressed && !isGenerating ? styles.pressed : null,
+          ]}
         >
           <View style={styles.buttonContent}>
             {isGenerating ? <ActivityIndicator color="#ffffff" size="small" /> : null}
@@ -291,9 +305,36 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
+  customize: {
+    alignItems: 'center',
+    backgroundColor: '#f2f2f7',
+    borderRadius: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 56,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+  },
+  customizeTitle: {
+    color: '#1c1c1e',
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  customizeSubtitle: {
+    color: '#6c6c70',
+    fontSize: 13,
+    fontVariant: ['tabular-nums'],
+    marginTop: 2,
+  },
+  chevron: {
+    color: '#8e8e93',
+    fontSize: 28,
+    fontWeight: '400',
+    transform: [{ translateY: -1 }],
+  },
   button: {
     alignItems: 'center',
-    backgroundColor: '#2457d6',
+    backgroundColor: '#007aff',
     borderCurve: 'continuous',
     borderRadius: 14,
     justifyContent: 'center',
@@ -302,6 +343,10 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     opacity: 0.65,
+  },
+  pressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.96 }],
   },
   buttonContent: {
     alignItems: 'center',
