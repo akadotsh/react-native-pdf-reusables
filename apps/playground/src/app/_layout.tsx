@@ -11,12 +11,12 @@ export default function RootLayout() {
           name="components"
           options={{
             contentStyle: { backgroundColor: '#f2f0ec' },
+            gestureEnabled: false,
             headerShown: false,
             presentation: 'formSheet',
-            sheetAllowedDetents: [0.65, 0.9],
+            sheetAllowedDetents: [0.68],
             sheetCornerRadius: 28,
-            sheetExpandsWhenScrolledToEdge: false,
-            sheetGrabberVisible: true,
+            sheetGrabberVisible: false,
             sheetInitialDetentIndex: 0,
           }}
         />
