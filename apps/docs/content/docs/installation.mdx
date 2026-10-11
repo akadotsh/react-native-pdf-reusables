@@ -1,0 +1,37 @@
+---
+title: Installation
+description: How components will be copied into React Native projects.
+---
+
+The public installation model is source-owned: the CLI will copy component
+files into your project instead of adding a runtime component library.
+
+## Planned command
+
+```bash
+npx react-native-pdf-reusables@latest add text
+```
+
+Multiple components will be installable in one command:
+
+```bash
+npx react-native-pdf-reusables@latest add document page stack text
+```
+
+<Callout type="warning" title="CLI not published yet">
+  The component primitives and renderer work, but the source registry and CLI
+  are the next implementation milestone. These commands document that contract;
+  they will not work from npm until the CLI is published.
+</Callout>
+
+## Try the components today
+
+Clone this repository, install the workspace, and start the native playground:
+
+```bash
+pnpm install
+pnpm --filter pdf-reusables-playground start
+```
+
+The playground generates PDFs on-device, so page breaks, headers, local images,
+and other native behavior can be validated on iOS or Android.

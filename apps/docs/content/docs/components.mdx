@@ -1,18 +1,210 @@
 ---
 title: Components
-description: Printable building blocks currently available in the project.
+description: API guide for every printable component currently implemented.
 ---
+
+All components return a printable document tree. They are interpreted by
+`renderToHtml` and `renderToPdf`; they do not render React Native views.
+
+Once the CLI is published, install any component with:
+
+```bash
+npx react-native-pdf-reusables@latest add <component-name>
+```
+
+The commands below document the source-registry contract. See
+[Installation](/docs/installation) for current availability.
 
 ## Document structure
 
-- `Document`, `Page`, and `Stack`
-- `PageHeader`, `PageFooter`, `PageBreak`, and `KeepTogether`
-- `ThemeProvider` and `Watermark`
+```bash
+npx react-native-pdf-reusables@latest add document page stack theme-provider
+```
 
-## Content
+### Document
 
-- `Heading`, `Text`, `Image`, `Link`, and `Divider`
-- `KeyValueList`, `DataTable`, `Totals`, and `Signature`
+The root of a printable tree. `title` becomes the generated HTML document title.
 
-These components describe printable output. Use the native playground in this
-repository to validate generated PDFs on iOS and Android.
+| Prop | Type | Purpose |
+| --- | --- | --- |
+| `children` | `ReactNode` | Pages and providers in the document. |
+| `title` | `string` | Optional PDF document title. |
+
+### Page
+
+Creates a physical page section with an explicit page break after it.
+
+| Prop | Type | Default |
+| --- | --- | --- |
+| `size` | `'A4' \| 'Letter'` | `'A4'` |
+| `style` | `PdfStyleProp` | — |
+| `children` | `ReactNode` | — |
+
+### Stack
+
+Arranges children vertically. Use `gap` for predictable spacing rather than
+adding margins to every child.
+
+| Prop | Type | Purpose |
+| --- | --- | --- |
+| `gap` | `number` | Vertical gap in PDF points/pixels. |
+| `style` | `PdfStyleProp` | Overrides or extends the stack style. |
+| `children` | `ReactNode` | Stack content. |
+
+### ThemeProvider
+
+Makes color, font, and spacing tokens available to style functions below it.
+It does not emit an extra HTML element.
+
+| Prop | Type | Purpose |
+| --- | --- | --- |
+| `tokens` | `ThemeTokens` | Partial color, font, and spacing tokens. |
+| `children` | `ReactNode` | The themed document subtree. |
+
+```tsx
+<Document title="Invoice 1042">
+  <ThemeProvider tokens={{ colors: { accent: '#2563eb' } }}>
+    <Page size="A4" style={{ padding: 40 }}>
+      <Stack gap={16}>
+        <Heading>Invoice</Heading>
+        <Text>Prepared on this device.</Text>
+      </Stack>
+    </Page>
+  </ThemeProvider>
+</Document>
+```
+
+## Typography and media
+
+```bash
+npx react-native-pdf-reusables@latest add heading text link image divider
+```
+
+### Heading
+
+Creates an `h1`, `h2`, or `h3` in generated output. `level` defaults to `1`.
+
+### Text
+
+The inline text primitive. It accepts printable children and an optional
+`PdfStyleProp`.
+
+### Link
+
+Creates a clickable link. Pass the destination through the required `href`
+prop and its label through `children`.
+
+### Image
+
+Embeds an image from a URI or data URI. `src` is required; `alt` and `style`
+are optional. For device-local files, confirm the URI is readable by the print
+renderer before generating the PDF.
+
+### Divider
+
+Creates a horizontal rule. Use `style` to control its color, thickness, and
+spacing.
+
+```tsx
+<Stack gap={8}>
+  <Heading level={2}>Payment details</Heading>
+  <Text style={{ color: '#475569' }}>Due within 30 days.</Text>
+  <Link href="https://example.com/invoices/1042">Open invoice</Link>
+  <Divider style={{ borderColor: '#e2e8f0' }} />
+  <Image src={logoDataUri} alt="Company logo" style={{ width: 96 }} />
+</Stack>
+```
+
+## Page behavior
+
+```bash
+npx react-native-pdf-reusables@latest add page-header page-footer page-break keep-together watermark
+```
+
+### PageHeader and PageFooter
+
+Create semantic header and footer regions. Both accept `children` and `style`.
+Their final repetition and positioning depend on the platform print engine, so
+validate them on both iOS and Android.
+
+### PageBreak
+
+Forces all following content onto a new printed page. It has no props.
+
+### KeepTogether
+
+Applies print rules that ask the renderer not to split its children across
+pages. Very tall content can still be split when it cannot fit on one page.
+
+### Watermark
+
+Places content at the center of printed output with fixed positioning, reduced
+opacity, and a default diagonal rotation. Override those values through `style`.
+
+```tsx
+<Page>
+  <PageHeader><Text>Quarterly report</Text></PageHeader>
+  <Watermark><Heading>Draft</Heading></Watermark>
+  <KeepTogether>
+    <Heading level={2}>Summary</Heading>
+    <Text>This heading and paragraph should remain together.</Text>
+  </KeepTogether>
+  <PageBreak />
+  <PageFooter><Text>Confidential</Text></PageFooter>
+</Page>
+```
+
+## Structured data
+
+```bash
+npx react-native-pdf-reusables@latest add key-value-list data-table totals signature
+```
+
+### KeyValueList
+
+Renders label/value pairs with labels on the left and values aligned on the
+right. Pass an `items` array containing `{ label, value }` objects.
+
+### DataTable
+
+Builds a typed table from `rows` and column definitions. Each column provides a
+`header` and a `render(row, index)` function.
+
+| Prop | Type | Purpose |
+| --- | --- | --- |
+| `rows` | `readonly Row[]` | Data rendered into table rows. |
+| `columns` | `readonly DataTableColumn<Row>[]` | Header and cell renderers. |
+| `repeatHeader` | `boolean` | Repeats the header after page breaks by default. |
+| `headerStyle` | `PdfStyleProp` | Shared header-cell style. |
+| `cellStyle` | `PdfStyleProp` | Shared body-cell style. |
+| `style` | `PdfStyleProp` | Table-level style. |
+
+### Totals
+
+Renders summary label/value pairs as one keep-together block. Its `items` use
+the same shape as `KeyValueList`.
+
+### Signature
+
+Keeps signature content, a rule, and its optional `label` together. Use
+`children` for the signed name or image.
+
+```tsx
+<Stack gap={20}>
+  <KeyValueList items={[
+    { label: 'Invoice', value: 'INV-1042' },
+    { label: 'Customer', value: 'Acme & Partners' },
+  ]} />
+
+  <DataTable
+    rows={lines}
+    columns={[
+      { header: 'Item', render: (line) => line.name },
+      { header: 'Amount', render: (line) => line.amount },
+    ]}
+  />
+
+  <Totals items={[{ label: 'Total', value: 'INR 1,180' }]} />
+  <Signature label="Authorized signature">Akash Prasad</Signature>
+</Stack>
+```
