@@ -1,0 +1,65 @@
+---
+title: Playground
+description: Run the native validation app and inspect generated PDFs on iOS or Android.
+---
+
+The playground is a local Expo app for trying the components and validating
+the generated document on a real device. It is a development tool, not a web
+preview or an app that users need to ship with their project.
+
+## What is included
+
+- A component picker for adding and removing printable sections.
+- Page size and page padding controls.
+- An in-app PDF preview for faster iteration.
+- Native print and export actions for checking the final file.
+- Behavior examples for page breaks, repeating table headers, `KeepTogether`,
+  headers, footers, watermarks, and images.
+
+## Run it locally
+
+From the repository root:
+
+```bash
+pnpm install
+pnpm --filter pdf-reusables-playground start
+```
+
+Expo will print a QR code. Scan it with Expo Go on Android or the Camera app on
+iOS, then open the project on the device. Your computer and phone should be on
+the same network; use Expo's tunnel mode when local network discovery is not
+available:
+
+```bash
+pnpm --filter pdf-reusables-playground start --tunnel
+```
+
+<Callout type="info" title="Use the workspace command">
+  Run the command from the repository root. `pnpm expo start` does not work
+  there because Expo is installed inside the playground workspace.
+</Callout>
+
+## Try a document
+
+1. Open **Components** and select the sections you want in the document.
+2. Adjust the page size or padding when testing layout behavior.
+3. Choose **Generate and preview** to render the PDF on the device.
+4. Inspect the document inside the app.
+5. Use **Print / export** to check the platform's final PDF output.
+
+## What to validate on both platforms
+
+The preview is useful for iteration, but the operating system owns the final
+print renderer. Test these behaviors separately on iOS and Android:
+
+- Content near the right and bottom page edges.
+- Automatic and explicit page breaks.
+- Repeating table headers across pages.
+- `KeepTogether` blocks near a page boundary.
+- Header, footer, and watermark positioning.
+- Local file and base64 image sources.
+
+<Cards>
+  <Card title="Browse components" href="/docs/components" description="See the primitives used by the playground." />
+  <Card title="Installation" href="/docs/installation" description="Review the planned source-copy workflow." />
+</Cards>
