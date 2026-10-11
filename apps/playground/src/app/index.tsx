@@ -38,11 +38,11 @@ import { usePdfPreview } from '../components/pdf-preview-context';
 const documentIcon =
   'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMyNDU3ZDYiLz48cGF0aCBkPSJNMTggMTZoMjBsOCA4djI0SDE4eiIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzggMTZ2MTBoOCIgZmlsbD0iI2I5Y2NmZiIvPjwvc3ZnPg==';
 
-function PreviewTheme({ accent, children, enabled }: PropsWithChildren<{ accent: string; enabled: boolean }>) {
+function PreviewTheme({ children, enabled }: PropsWithChildren<{ enabled: boolean }>) {
   if (!enabled) return children;
 
   return (
-    <ThemeProvider tokens={{ colors: { accent, ink: '#474645' } }}>
+    <ThemeProvider tokens={{ colors: { accent: '#0080e8', ink: '#474645' } }}>
       {children}
     </ThemeProvider>
   );
@@ -52,7 +52,7 @@ export default function PlaygroundScreen() {
   const [result, setResult] = useState<PdfResult>();
   const [error, setError] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
-  const { accentColor, content, pagePadding, pageSize, selected } = useComponentSelection();
+  const { content, pagePadding, pageSize, selected } = useComponentSelection();
   const { setPreview } = usePdfPreview();
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
@@ -64,7 +64,7 @@ export default function PlaygroundScreen() {
     try {
       const document = (
         <Document title="PDF Reusables Playground">
-          <PreviewTheme accent={accentColor} enabled={selected.theme}>
+          <PreviewTheme enabled={selected.theme}>
           <Page
             size={pageSize}
             style={(theme) => ({ color: theme.colors.ink ?? '#0f172a', padding: pagePadding })}
@@ -101,7 +101,7 @@ export default function PlaygroundScreen() {
                   Text, headings, and vertical stacks provide the foundation for structured PDF documents.
                 </Text>
                 {selected.link ? (
-                  <Link href={content.linkHref} style={{ color: accentColor }}>
+                  <Link href={content.linkHref} style={{ color: '#0080e8' }}>
                     {content.linkLabel}
                   </Link>
                 ) : null}

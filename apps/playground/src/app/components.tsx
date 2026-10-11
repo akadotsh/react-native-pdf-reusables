@@ -54,27 +54,17 @@ const signatureFields = [
   { key: 'signatureLabel', label: 'Signature label' },
 ] as const;
 
-const accentOptions = [
-  { label: 'Blue', value: '#0080e8' },
-  { label: 'Indigo', value: '#5856d6' },
-  { label: 'Green', value: '#248a3d' },
-];
-
 export default function ComponentsScreen() {
   const {
-    accentColor,
     content,
     pagePadding,
     pageSize,
     selected,
-    setAccentColor,
     setContent,
     setPagePadding,
     setPageSize,
     toggle,
   } = useComponentSelection();
-  const accentIndex = accentOptions.findIndex((option) => option.value === accentColor);
-  const accent = accentOptions[accentIndex];
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeArea}>
@@ -135,22 +125,10 @@ export default function ComponentsScreen() {
             accessibilityLabel={`Page padding, ${pagePadding}. Tap to change.`}
             accessibilityRole="button"
             onPress={() => setPagePadding(pagePadding === 40 ? 24 : pagePadding + 8)}
-            style={({ pressed }) => [styles.setting, styles.settingBorder, pressed ? styles.pressed : null]}
+            style={({ pressed }) => [styles.setting, pressed ? styles.pressed : null]}
           >
             <Text style={styles.foundation}>Padding</Text>
             <Text style={styles.settingValue}>{pagePadding}</Text>
-          </Pressable>
-          <Pressable
-            accessibilityLabel={`Accent color, ${accent.label}. Tap to change.`}
-            accessibilityRole="button"
-            onPress={() => setAccentColor(accentOptions[(accentIndex + 1) % accentOptions.length].value)}
-            style={({ pressed }) => [styles.setting, pressed ? styles.pressed : null]}
-          >
-            <Text style={styles.foundation}>Accent</Text>
-            <View style={styles.accentValue}>
-              <View style={[styles.accentSwatch, { backgroundColor: accentColor }]} />
-              <Text style={styles.settingValue}>{accent.label}</Text>
-            </View>
           </Pressable>
         </View>
 
@@ -380,16 +358,6 @@ const styles = StyleSheet.create({
     color: '#0080e8',
     fontSize: 15,
     fontWeight: '500',
-  },
-  accentValue: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 7,
-  },
-  accentSwatch: {
-    borderRadius: 999,
-    height: 12,
-    width: 12,
   },
   input: {
     backgroundColor: '#f2f0ec',
