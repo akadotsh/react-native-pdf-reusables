@@ -6,22 +6,15 @@ description: API guide for every printable component currently implemented.
 All components return a printable document tree. They are interpreted by
 `renderToHtml` and `renderToPdf`; they do not render React Native views.
 
-Once the CLI is published, install any component with:
-
-```bash
-npx react-native-pdf-reusables@latest add <component-name>
-```
-
-The commands below document the source-registry contract. See
-[Installation](/docs/installation) for current availability.
+Each component includes a package-manager command you can copy. The commands
+document the source-registry contract and will become runnable when the CLI is
+published. See [Installation](/docs/installation) for current availability.
 
 ## Document structure
 
-```bash
-npx react-native-pdf-reusables@latest add document page stack theme-provider
-```
-
 ### Document
+
+<InstallCommand name="document" />
 
 The root of a printable tree. `title` becomes the generated HTML document title.
 
@@ -31,6 +24,8 @@ The root of a printable tree. `title` becomes the generated HTML document title.
 | `title` | `string` | Optional PDF document title. |
 
 ### Page
+
+<InstallCommand name="page" />
 
 Creates a physical page section with an explicit page break after it.
 
@@ -42,6 +37,8 @@ Creates a physical page section with an explicit page break after it.
 
 ### Stack
 
+<InstallCommand name="stack" />
+
 Arranges children vertically. Use `gap` for predictable spacing rather than
 adding margins to every child.
 
@@ -52,6 +49,8 @@ adding margins to every child.
 | `children` | `ReactNode` | Stack content. |
 
 ### ThemeProvider
+
+<InstallCommand name="theme-provider" />
 
 Makes color, font, and spacing tokens available to style functions below it.
 It does not emit an extra HTML element.
@@ -76,31 +75,37 @@ It does not emit an extra HTML element.
 
 ## Typography and media
 
-```bash
-npx react-native-pdf-reusables@latest add heading text link image divider
-```
-
 ### Heading
+
+<InstallCommand name="heading" />
 
 Creates an `h1`, `h2`, or `h3` in generated output. `level` defaults to `1`.
 
 ### Text
+
+<InstallCommand name="text" />
 
 The inline text primitive. It accepts printable children and an optional
 `PdfStyleProp`.
 
 ### Link
 
+<InstallCommand name="link" />
+
 Creates a clickable link. Pass the destination through the required `href`
 prop and its label through `children`.
 
 ### Image
+
+<InstallCommand name="image" />
 
 Embeds an image from a URI or data URI. `src` is required; `alt` and `style`
 are optional. For device-local files, confirm the URI is readable by the print
 renderer before generating the PDF.
 
 ### Divider
+
+<InstallCommand name="divider" />
 
 Creates a horizontal rule. Use `style` to control its color, thickness, and
 spacing.
@@ -117,26 +122,36 @@ spacing.
 
 ## Page behavior
 
-```bash
-npx react-native-pdf-reusables@latest add page-header page-footer page-break keep-together watermark
-```
+### PageHeader
 
-### PageHeader and PageFooter
+<InstallCommand name="page-header" />
 
-Create semantic header and footer regions. Both accept `children` and `style`.
-Their final repetition and positioning depend on the platform print engine, so
-validate them on both iOS and Android.
+Creates a semantic header region. Its final repetition and positioning depend
+on the platform print engine, so validate it on both iOS and Android.
+
+### PageFooter
+
+<InstallCommand name="page-footer" />
+
+Creates a semantic footer region. Its final repetition and positioning depend
+on the platform print engine, so validate it on both iOS and Android.
 
 ### PageBreak
+
+<InstallCommand name="page-break" />
 
 Forces all following content onto a new printed page. It has no props.
 
 ### KeepTogether
 
+<InstallCommand name="keep-together" />
+
 Applies print rules that ask the renderer not to split its children across
 pages. Very tall content can still be split when it cannot fit on one page.
 
 ### Watermark
+
+<InstallCommand name="watermark" />
 
 Places content at the center of printed output with fixed positioning, reduced
 opacity, and a default diagonal rotation. Override those values through `style`.
@@ -156,16 +171,16 @@ opacity, and a default diagonal rotation. Override those values through `style`.
 
 ## Structured data
 
-```bash
-npx react-native-pdf-reusables@latest add key-value-list data-table totals signature
-```
-
 ### KeyValueList
+
+<InstallCommand name="key-value-list" />
 
 Renders label/value pairs with labels on the left and values aligned on the
 right. Pass an `items` array containing `{ label, value }` objects.
 
 ### DataTable
+
+<InstallCommand name="data-table" />
 
 Builds a typed table from `rows` and column definitions. Each column provides a
 `header` and a `render(row, index)` function.
@@ -181,10 +196,14 @@ Builds a typed table from `rows` and column definitions. Each column provides a
 
 ### Totals
 
+<InstallCommand name="totals" />
+
 Renders summary label/value pairs as one keep-together block. Its `items` use
 the same shape as `KeyValueList`.
 
 ### Signature
+
+<InstallCommand name="signature" />
 
 Keeps signature content, a rule, and its optional `label` together. Use
 `children` for the signed name or image.
