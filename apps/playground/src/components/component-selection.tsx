@@ -36,6 +36,10 @@ type ContentField =
   | 'date'
   | 'heading'
   | 'invoice'
+  | 'linkHref'
+  | 'linkLabel'
+  | 'signatureLabel'
+  | 'signatureName'
   | 'subtotal'
   | 'tableAmount1'
   | 'tableAmount2'
@@ -62,6 +66,10 @@ export function ComponentSelectionProvider({ children }: PropsWithChildren) {
     date: '10 October 2026',
     heading: 'Basic components',
     invoice: 'INV-1042',
+    linkHref: 'https://github.com/akadotsh/react-native-pdf-reusables',
+    linkLabel: 'View the project source',
+    signatureLabel: 'Authorized signature',
+    signatureName: 'Akash Prasad',
     subtotal: 'INR 1,000',
     tableAmount1: 'INR 800',
     tableAmount2: 'INR 200',

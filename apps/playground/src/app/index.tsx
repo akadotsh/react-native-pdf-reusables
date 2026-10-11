@@ -101,8 +101,8 @@ export default function PlaygroundScreen() {
                   Text, headings, and vertical stacks provide the foundation for structured PDF documents.
                 </Text>
                 {selected.link ? (
-                  <Link href="https://github.com/akadotsh/react-native-pdf-reusables" style={{ color: '#2457d6' }}>
-                    View the project source
+                  <Link href={content.linkHref} style={{ color: '#2457d6' }}>
+                    {content.linkLabel}
                   </Link>
                 ) : null}
               </Stack>
@@ -171,8 +171,8 @@ export default function PlaygroundScreen() {
                 <Heading level={2} style={{ margin: 0 }}>
                   Signature
                 </Heading>
-                <Signature label="Authorized signature">
-                  <Text>Akash Prasad</Text>
+                <Signature label={content.signatureLabel}>
+                  <Text>{content.signatureName}</Text>
                 </Signature>
               </Stack> : null}
             </Stack>

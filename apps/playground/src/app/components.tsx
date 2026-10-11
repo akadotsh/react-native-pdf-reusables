@@ -44,6 +44,16 @@ const tableFields = [
   { key: 'tableAmount2', label: 'Row 2 amount' },
 ] as const;
 
+const linkFields = [
+  { key: 'linkLabel', label: 'Link label' },
+  { key: 'linkHref', label: 'URL' },
+] as const;
+
+const signatureFields = [
+  { key: 'signatureName', label: 'Name' },
+  { key: 'signatureLabel', label: 'Signature label' },
+] as const;
+
 export default function ComponentsScreen() {
   const { content, selected, setContent, toggle } = useComponentSelection();
 
@@ -169,6 +179,50 @@ export default function ComponentsScreen() {
                   <Text style={styles.fieldLabel}>{field.label}</Text>
                   <TextInput
                     accessibilityLabel={`${field.label} value`}
+                    onChangeText={(value) => setContent(field.key, value)}
+                    placeholder={field.label}
+                    placeholderTextColor="#9a9896"
+                    style={styles.input}
+                    value={content[field.key]}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {selected.link ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>LINK</Text>
+            <View style={styles.fields}>
+              {linkFields.map((field) => (
+                <View key={field.key} style={styles.field}>
+                  <Text style={styles.fieldLabel}>{field.label}</Text>
+                  <TextInput
+                    accessibilityLabel={field.label}
+                    autoCapitalize={field.key === 'linkHref' ? 'none' : 'sentences'}
+                    keyboardType={field.key === 'linkHref' ? 'url' : 'default'}
+                    onChangeText={(value) => setContent(field.key, value)}
+                    placeholder={field.label}
+                    placeholderTextColor="#9a9896"
+                    style={styles.input}
+                    value={content[field.key]}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {selected.signature ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>SIGNATURE</Text>
+            <View style={styles.fields}>
+              {signatureFields.map((field) => (
+                <View key={field.key} style={styles.field}>
+                  <Text style={styles.fieldLabel}>{field.label}</Text>
+                  <TextInput
+                    accessibilityLabel={field.label}
                     onChangeText={(value) => setContent(field.key, value)}
                     placeholder={field.label}
                     placeholderTextColor="#9a9896"
