@@ -4,8 +4,12 @@
   "description": "Source-owned PDF components for React Native and Expo",
   "license": "MIT",
   "type": "module",
+  "bin": {
+    "react-native-pdf-reusables": "./dist/cli.js"
+  },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -29,6 +33,7 @@
     }
   },
   "devDependencies": {
+    "@types/node": "^26.6.4",
     "@types/react": "~19.2.2",
     "react": "19.2.3"
   }
