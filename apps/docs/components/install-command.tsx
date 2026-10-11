@@ -26,7 +26,7 @@ export function InstallCommand({ name }: { name: string }) {
       {runners.map(([manager, runner]) => (
         <CodeBlockTab key={manager} value={manager}>
           <CodeBlock>
-            <Pre>
+            <Pre className="px-4">
               <code>{`${runner} react-native-pdf-reusables@latest add ${name}`}</code>
             </Pre>
           </CodeBlock>
