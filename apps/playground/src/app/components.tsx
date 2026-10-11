@@ -29,6 +29,12 @@ const detailFields = [
   { key: 'date', label: 'Date' },
 ] as const;
 
+const totalFields = [
+  { key: 'subtotal', label: 'Subtotal' },
+  { key: 'tax', label: 'Tax' },
+  { key: 'total', label: 'Total' },
+] as const;
+
 export default function ComponentsScreen() {
   const { content, selected, setContent, toggle } = useComponentSelection();
 
@@ -108,6 +114,27 @@ export default function ComponentsScreen() {
             <Text style={styles.sectionLabel}>KEY-VALUE LIST</Text>
             <View style={styles.fields}>
               {detailFields.map((field) => (
+                <View key={field.key} style={styles.field}>
+                  <Text style={styles.fieldLabel}>{field.label}</Text>
+                  <TextInput
+                    accessibilityLabel={`${field.label} value`}
+                    onChangeText={(value) => setContent(field.key, value)}
+                    placeholder={field.label}
+                    placeholderTextColor="#9a9896"
+                    style={styles.input}
+                    value={content[field.key]}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {selected.totals ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>TOTALS</Text>
+            <View style={styles.fields}>
+              {totalFields.map((field) => (
                 <View key={field.key} style={styles.field}>
                   <Text style={styles.fieldLabel}>{field.label}</Text>
                   <TextInput

@@ -31,7 +31,15 @@ const initialSelection: Record<OptionalComponent, boolean> = {
   watermark: false,
 };
 
-type ContentField = 'customer' | 'date' | 'heading' | 'invoice' | 'text';
+type ContentField =
+  | 'customer'
+  | 'date'
+  | 'heading'
+  | 'invoice'
+  | 'subtotal'
+  | 'tax'
+  | 'text'
+  | 'total';
 
 type ComponentSelection = {
   content: Record<ContentField, string>;
@@ -48,7 +56,10 @@ export function ComponentSelectionProvider({ children }: PropsWithChildren) {
     date: '10 October 2026',
     heading: 'Basic components',
     invoice: 'INV-1042',
+    subtotal: 'INR 1,000',
+    tax: 'INR 180',
     text: 'A printable component gallery generated on your device.',
+    total: 'INR 1,180',
   });
   const [selected, setSelected] = useState(initialSelection);
 

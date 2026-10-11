@@ -126,9 +126,9 @@ export default function PlaygroundScreen() {
                 </Heading>
                 <Totals
                   items={[
-                    { label: 'Subtotal', value: 'INR 1,000' },
-                    { label: 'Tax', value: 'INR 180' },
-                    { label: 'Total', value: 'INR 1,180' },
+                    { label: 'Subtotal', value: content.subtotal },
+                    { label: 'Tax', value: content.tax },
+                    { label: 'Total', value: content.total },
                   ]}
                 />
               </Stack> : null}
