@@ -55,7 +55,16 @@ const signatureFields = [
 ] as const;
 
 export default function ComponentsScreen() {
-  const { content, selected, setContent, toggle } = useComponentSelection();
+  const {
+    content,
+    pagePadding,
+    pageSize,
+    selected,
+    setContent,
+    setPagePadding,
+    setPageSize,
+    toggle,
+  } = useComponentSelection();
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeArea}>
@@ -99,6 +108,28 @@ export default function ComponentsScreen() {
               />
             </View>
           </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>PAGE</Text>
+          <Pressable
+            accessibilityLabel={`Page size, ${pageSize}. Tap to change.`}
+            accessibilityRole="button"
+            onPress={() => setPageSize(pageSize === 'A4' ? 'Letter' : 'A4')}
+            style={({ pressed }) => [styles.setting, styles.settingBorder, pressed ? styles.pressed : null]}
+          >
+            <Text style={styles.foundation}>Size</Text>
+            <Text style={styles.settingValue}>{pageSize}</Text>
+          </Pressable>
+          <Pressable
+            accessibilityLabel={`Page padding, ${pagePadding}. Tap to change.`}
+            accessibilityRole="button"
+            onPress={() => setPagePadding(pagePadding === 40 ? 24 : pagePadding + 8)}
+            style={({ pressed }) => [styles.setting, pressed ? styles.pressed : null]}
+          >
+            <Text style={styles.foundation}>Padding</Text>
+            <Text style={styles.settingValue}>{pagePadding}</Text>
+          </Pressable>
         </View>
 
         <View style={styles.options}>
@@ -311,6 +342,21 @@ const styles = StyleSheet.create({
   fieldLabel: {
     color: '#7a7876',
     fontSize: 13,
+    fontWeight: '500',
+  },
+  setting: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 44,
+  },
+  settingBorder: {
+    borderBottomColor: '#ebe8e3',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  settingValue: {
+    color: '#0080e8',
+    fontSize: 15,
     fontWeight: '500',
   },
   input: {

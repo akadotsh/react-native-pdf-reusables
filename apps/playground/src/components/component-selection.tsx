@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, type PropsWithChildren } from 'react';
+import type { PageSize } from 'react-native-pdf-reusables';
 
 export type OptionalComponent =
   | 'details'
@@ -53,8 +54,12 @@ type ContentField =
 
 type ComponentSelection = {
   content: Record<ContentField, string>;
+  pagePadding: number;
+  pageSize: PageSize;
   selected: Record<OptionalComponent, boolean>;
   setContent: (field: ContentField, value: string) => void;
+  setPagePadding: (padding: number) => void;
+  setPageSize: (size: PageSize) => void;
   toggle: (component: OptionalComponent) => void;
 };
 
@@ -81,6 +86,8 @@ export function ComponentSelectionProvider({ children }: PropsWithChildren) {
     text: 'A printable component gallery generated on your device.',
     total: 'INR 1,180',
   });
+  const [pagePadding, setPagePadding] = useState(32);
+  const [pageSize, setPageSize] = useState<PageSize>('A4');
   const [selected, setSelected] = useState(initialSelection);
 
   function setContent(field: ContentField, value: string) {
@@ -92,7 +99,9 @@ export function ComponentSelectionProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <ComponentSelectionContext.Provider value={{ content, selected, setContent, toggle }}>
+    <ComponentSelectionContext.Provider
+      value={{ content, pagePadding, pageSize, selected, setContent, setPagePadding, setPageSize, toggle }}
+    >
       {children}
     </ComponentSelectionContext.Provider>
   );

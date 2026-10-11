@@ -6,9 +6,10 @@ type DocumentPreviewProps = {
 };
 
 export function DocumentPreview({ html }: DocumentPreviewProps) {
+  const viewportWidth = html.includes('width:8.5in') ? 848 : 826;
   const previewHtml = html.replace(
     '<head>',
-    '<head><meta name="viewport" content="width=826"><style>@media screen{body{background:#d8d5d0;padding:16px}[data-pdf-page]{background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.12);box-sizing:border-box}}</style>',
+    `<head><meta name="viewport" content="width=${viewportWidth}"><style>@media screen{body{background:#d8d5d0;padding:16px}[data-pdf-page]{background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.12);box-sizing:border-box}}</style>`,
   );
 
   return (

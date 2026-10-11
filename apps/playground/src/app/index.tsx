@@ -52,7 +52,7 @@ export default function PlaygroundScreen() {
   const [result, setResult] = useState<PdfResult>();
   const [error, setError] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
-  const { content, selected } = useComponentSelection();
+  const { content, pagePadding, pageSize, selected } = useComponentSelection();
   const { setPreview } = usePdfPreview();
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
@@ -66,8 +66,8 @@ export default function PlaygroundScreen() {
         <Document title="PDF Reusables Playground">
           <PreviewTheme enabled={selected.theme}>
           <Page
-            size="A4"
-            style={(theme) => ({ color: theme.colors.ink ?? '#0f172a', padding: 32 })}
+            size={pageSize}
+            style={(theme) => ({ color: theme.colors.ink ?? '#0f172a', padding: pagePadding })}
           >
             {selected.watermark ? (
               <Watermark style={{ fontSize: 56, fontWeight: 'bold' }}>DRAFT</Watermark>
