@@ -53,10 +53,12 @@ type ContentField =
   | 'total';
 
 type ComponentSelection = {
+  accentColor: string;
   content: Record<ContentField, string>;
   pagePadding: number;
   pageSize: PageSize;
   selected: Record<OptionalComponent, boolean>;
+  setAccentColor: (color: string) => void;
   setContent: (field: ContentField, value: string) => void;
   setPagePadding: (padding: number) => void;
   setPageSize: (size: PageSize) => void;
@@ -66,6 +68,7 @@ type ComponentSelection = {
 const ComponentSelectionContext = createContext<ComponentSelection | null>(null);
 
 export function ComponentSelectionProvider({ children }: PropsWithChildren) {
+  const [accentColor, setAccentColor] = useState('#0080e8');
   const [content, setContentState] = useState({
     customer: 'Acme & Partners',
     date: '10 October 2026',
@@ -100,7 +103,18 @@ export function ComponentSelectionProvider({ children }: PropsWithChildren) {
 
   return (
     <ComponentSelectionContext.Provider
-      value={{ content, pagePadding, pageSize, selected, setContent, setPagePadding, setPageSize, toggle }}
+      value={{
+        accentColor,
+        content,
+        pagePadding,
+        pageSize,
+        selected,
+        setAccentColor,
+        setContent,
+        setPagePadding,
+        setPageSize,
+        toggle,
+      }}
     >
       {children}
     </ComponentSelectionContext.Provider>
