@@ -1,7 +1,22 @@
 # react-native-pdf-reusables
 
-Typed, source-owned building blocks for printable React Native and Expo
-documents.
+Source-owned building blocks for printable React Native and Expo documents.
+
+Copy individual components into your project:
+
+```sh
+npx react-native-pdf-reusables@latest add text heading stack
+```
+
+Or install the complete component and renderer stack:
+
+```sh
+npx react-native-pdf-reusables@latest add renderer
+```
+
+The CLI writes to `src/components/pdf` when the project has a `src` directory,
+or `components/pdf` otherwise. It preserves changed files unless you pass
+`--overwrite`.
 
 ## Components
 
@@ -9,26 +24,22 @@ documents.
 - `Stack`, `Heading`, `Text`, `Image`, `Divider`, and `Link`
 - `renderToHtml` and `renderToPdf`
 
-Install the Expo Print backend in the consuming application:
+Install the optional Expo Print backend when using `renderToPdf`:
 
 ```sh
 npx expo install expo-print
 ```
 
 ```tsx
-import {
-  Divider,
-  Document,
-  Heading,
-  Link,
-  Page,
-  Stack,
-  Text,
-  ThemeProvider,
-  registerFont,
-  renderToHtml,
-  renderToPdf,
-} from 'react-native-pdf-reusables';
+import { Document } from './components/pdf/document';
+import { Heading } from './components/pdf/heading';
+import { Page } from './components/pdf/page';
+import { Stack } from './components/pdf/stack';
+import { Text } from './components/pdf/text';
+import { ThemeProvider } from './components/pdf/theme-provider';
+import { registerFont } from './components/pdf/font';
+import { renderToHtml } from './components/pdf/render-to-html';
+import { renderToPdf } from './components/pdf/render-to-pdf';
 
 registerFont({
   family: 'Inter',
@@ -54,8 +65,6 @@ const document = (
         <Stack gap={12}>
           <Heading style={({ colors }) => ({ color: colors.accent })}>Invoice</Heading>
           <Text>INV-1042</Text>
-          <Divider />
-          <Link href="https://example.com">View online</Link>
         </Stack>
       </Page>
     </ThemeProvider>

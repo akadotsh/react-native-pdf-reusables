@@ -1,28 +1,54 @@
 ---
 title: Installation
-description: How components will be copied into React Native projects.
+description: Copy source-owned PDF components into React Native projects.
 ---
 
-The public installation model is source-owned: the CLI will copy component
-files into your project instead of adding a runtime component library.
+The installation model is source-owned: the CLI copies component files into
+your project instead of adding a runtime component library.
 
-## Planned command
+## Add a component
+
+<InstallCommand name="text" />
+
+Add multiple components in one command:
+
+<InstallCommand name="document page stack text" />
+
+The CLI also copies shared files such as `style.ts` and component dependencies.
+Running the same command again leaves unchanged files alone.
+
+## Add the renderer
+
+The renderer uses the complete primitive set, so this command installs all
+components together with `render-to-html.ts`, `render-to-pdf.ts`, and font and
+style support:
+
+<InstallCommand name="renderer" />
+
+Install `expo-print` when using `renderToPdf`:
 
 ```bash
-npx react-native-pdf-reusables@latest add text
+npx expo install expo-print
 ```
 
-Multiple components will be installable in one command:
+`renderToHtml` does not require Expo Print.
+
+## Output directory
+
+Projects with a `src` directory receive files in `src/components/pdf`.
+Otherwise, the CLI uses `components/pdf`. Override the destination from the
+project root when needed:
 
 ```bash
-npx react-native-pdf-reusables@latest add document page stack text
+npx react-native-pdf-reusables@latest add text --path src/pdf
 ```
 
-<Callout type="warning" title="CLI not published yet">
-  The component primitives and renderer work, but the source registry and CLI
-  are the next implementation milestone. These commands document that contract;
-  they will not work from npm until the CLI is published.
-</Callout>
+Existing changed files are never replaced automatically. Review your local
+changes before explicitly allowing replacement:
+
+```bash
+npx react-native-pdf-reusables@latest add text --overwrite
+```
 
 ## Try the components today
 
