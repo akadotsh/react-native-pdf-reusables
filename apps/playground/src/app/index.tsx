@@ -113,9 +113,9 @@ export default function PlaygroundScreen() {
                 </Heading>
                 <KeyValueList
                   items={[
-                    { label: 'Invoice', value: 'INV-1042' },
-                    { label: 'Customer', value: 'Acme & Partners' },
-                    { label: 'Date', value: '10 October 2026' },
+                    { label: 'Invoice', value: content.invoice },
+                    { label: 'Customer', value: content.customer },
+                    { label: 'Date', value: content.date },
                   ]}
                 />
               </Stack> : null}

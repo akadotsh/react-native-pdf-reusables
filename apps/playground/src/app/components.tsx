@@ -23,6 +23,12 @@ const options: { key: OptionalComponent; label: string }[] = [
   { key: 'theme', label: 'Theme provider' },
 ];
 
+const detailFields = [
+  { key: 'invoice', label: 'Invoice' },
+  { key: 'customer', label: 'Customer' },
+  { key: 'date', label: 'Date' },
+] as const;
+
 export default function ComponentsScreen() {
   const { content, selected, setContent, toggle } = useComponentSelection();
 
@@ -96,6 +102,27 @@ export default function ComponentsScreen() {
             );
           })}
         </View>
+
+        {selected.details ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>KEY-VALUE LIST</Text>
+            <View style={styles.fields}>
+              {detailFields.map((field) => (
+                <View key={field.key} style={styles.field}>
+                  <Text style={styles.fieldLabel}>{field.label}</Text>
+                  <TextInput
+                    accessibilityLabel={`${field.label} value`}
+                    onChangeText={(value) => setContent(field.key, value)}
+                    placeholder={field.label}
+                    placeholderTextColor="#9a9896"
+                    style={styles.input}
+                    value={content[field.key]}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
 
       </ScrollView>
       <View style={styles.footer}>

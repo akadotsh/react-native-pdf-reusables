@@ -31,10 +31,12 @@ const initialSelection: Record<OptionalComponent, boolean> = {
   watermark: false,
 };
 
+type ContentField = 'customer' | 'date' | 'heading' | 'invoice' | 'text';
+
 type ComponentSelection = {
-  content: { heading: string; text: string };
+  content: Record<ContentField, string>;
   selected: Record<OptionalComponent, boolean>;
-  setContent: (field: 'heading' | 'text', value: string) => void;
+  setContent: (field: ContentField, value: string) => void;
   toggle: (component: OptionalComponent) => void;
 };
 
@@ -42,12 +44,15 @@ const ComponentSelectionContext = createContext<ComponentSelection | null>(null)
 
 export function ComponentSelectionProvider({ children }: PropsWithChildren) {
   const [content, setContentState] = useState({
+    customer: 'Acme & Partners',
+    date: '10 October 2026',
     heading: 'Basic components',
+    invoice: 'INV-1042',
     text: 'A printable component gallery generated on your device.',
   });
   const [selected, setSelected] = useState(initialSelection);
 
-  function setContent(field: 'heading' | 'text', value: string) {
+  function setContent(field: ContentField, value: string) {
     setContentState((current) => ({ ...current, [field]: value }));
   }
 
