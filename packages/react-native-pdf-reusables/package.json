@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "Source-owned PDF components for React Native and Expo",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akadotsh/react-native-pdf-reusables.git",
+    "directory": "packages/react-native-pdf-reusables"
+  },
+  "homepage": "https://github.com/akadotsh/react-native-pdf-reusables#readme",
+  "bugs": {
+    "url": "https://github.com/akadotsh/react-native-pdf-reusables/issues"
+  },
   "type": "module",
   "bin": {
     "react-native-pdf-reusables": "./dist/cli.js"
@@ -21,7 +30,12 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepack": "pnpm build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "peerDependencies": {
     "expo-print": "*",

@@ -1,0 +1,41 @@
+name: Publish CLI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+
+      - name: Verify release version
+        run: node -e "const version = require('./packages/react-native-pdf-reusables/package.json').version; if (process.env.GITHUB_REF_NAME !== 'v' + version) throw new Error('Release tag must be v' + version)"
+
+      - run: pnpm build
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+      - name: Publish to npm
+        run: npm publish --access public --provenance
+        working-directory: packages/react-native-pdf-reusables
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
