@@ -37,6 +37,12 @@ type ContentField =
   | 'heading'
   | 'invoice'
   | 'subtotal'
+  | 'tableAmount1'
+  | 'tableAmount2'
+  | 'tableItem1'
+  | 'tableItem2'
+  | 'tableQuantity1'
+  | 'tableQuantity2'
   | 'tax'
   | 'text'
   | 'total';
@@ -57,6 +63,12 @@ export function ComponentSelectionProvider({ children }: PropsWithChildren) {
     heading: 'Basic components',
     invoice: 'INV-1042',
     subtotal: 'INR 1,000',
+    tableAmount1: 'INR 800',
+    tableAmount2: 'INR 200',
+    tableItem1: 'Consulting',
+    tableItem2: 'Report',
+    tableQuantity1: '2 hours',
+    tableQuantity2: '1',
     tax: 'INR 180',
     text: 'A printable component gallery generated on your device.',
     total: 'INR 1,180',

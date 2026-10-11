@@ -35,6 +35,15 @@ const totalFields = [
   { key: 'total', label: 'Total' },
 ] as const;
 
+const tableFields = [
+  { key: 'tableItem1', label: 'Row 1 item' },
+  { key: 'tableQuantity1', label: 'Row 1 quantity' },
+  { key: 'tableAmount1', label: 'Row 1 amount' },
+  { key: 'tableItem2', label: 'Row 2 item' },
+  { key: 'tableQuantity2', label: 'Row 2 quantity' },
+  { key: 'tableAmount2', label: 'Row 2 amount' },
+] as const;
+
 export default function ComponentsScreen() {
   const { content, selected, setContent, toggle } = useComponentSelection();
 
@@ -118,6 +127,27 @@ export default function ComponentsScreen() {
                   <Text style={styles.fieldLabel}>{field.label}</Text>
                   <TextInput
                     accessibilityLabel={`${field.label} value`}
+                    onChangeText={(value) => setContent(field.key, value)}
+                    placeholder={field.label}
+                    placeholderTextColor="#9a9896"
+                    style={styles.input}
+                    value={content[field.key]}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        {selected.table ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>DATA TABLE</Text>
+            <View style={styles.fields}>
+              {tableFields.map((field) => (
+                <View key={field.key} style={styles.field}>
+                  <Text style={styles.fieldLabel}>{field.label}</Text>
+                  <TextInput
+                    accessibilityLabel={field.label}
                     onChangeText={(value) => setContent(field.key, value)}
                     placeholder={field.label}
                     placeholderTextColor="#9a9896"

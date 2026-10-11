@@ -144,8 +144,16 @@ export default function PlaygroundScreen() {
                     { header: 'Amount', render: (row) => row.amount },
                   ]}
                   rows={[
-                    { amount: 'INR 800', item: 'Consulting', quantity: '2 hours' },
-                    { amount: 'INR 200', item: 'Report', quantity: '1' },
+                    {
+                      amount: content.tableAmount1,
+                      item: content.tableItem1,
+                      quantity: content.tableQuantity1,
+                    },
+                    {
+                      amount: content.tableAmount2,
+                      item: content.tableItem2,
+                      quantity: content.tableQuantity2,
+                    },
                   ]}
                 />
               </Stack> : null}
