@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -24,12 +24,13 @@ const options: { key: OptionalComponent; label: string }[] = [
 ];
 
 export default function ComponentsScreen() {
-  const { selected, toggle } = useComponentSelection();
+  const { content, selected, setContent, toggle } = useComponentSelection();
 
   return (
     <SafeAreaView edges={['bottom']} style={styles.safeArea}>
       <ScrollView
         contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
         nestedScrollEnabled
         style={styles.list}
       >
@@ -42,6 +43,31 @@ export default function ComponentsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>ALWAYS INCLUDED</Text>
           <Text style={styles.foundation}>Document · Page · Stack · Heading · Text</Text>
+          <View style={styles.fields}>
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Heading</Text>
+              <TextInput
+                accessibilityLabel="PDF heading"
+                onChangeText={(value) => setContent('heading', value)}
+                placeholder="Heading"
+                placeholderTextColor="#9a9896"
+                style={styles.input}
+                value={content.heading}
+              />
+            </View>
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>Text</Text>
+              <TextInput
+                accessibilityLabel="PDF text"
+                multiline
+                onChangeText={(value) => setContent('text', value)}
+                placeholder="Text"
+                placeholderTextColor="#9a9896"
+                style={[styles.input, styles.textArea]}
+                value={content.text}
+              />
+            </View>
+          </View>
         </View>
 
         <View style={styles.options}>
@@ -136,6 +162,32 @@ const styles = StyleSheet.create({
     color: '#474645',
     fontSize: 15,
     lineHeight: 21,
+  },
+  fields: {
+    gap: 12,
+    paddingTop: 10,
+  },
+  field: {
+    gap: 6,
+  },
+  fieldLabel: {
+    color: '#7a7876',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  input: {
+    backgroundColor: '#f2f0ec',
+    borderCurve: 'continuous',
+    borderRadius: 10,
+    color: '#474645',
+    fontSize: 16,
+    minHeight: 44,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  textArea: {
+    minHeight: 72,
+    textAlignVertical: 'top',
   },
   options: {
     backgroundColor: '#ffffff',

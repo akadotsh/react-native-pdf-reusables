@@ -52,7 +52,7 @@ export default function PlaygroundScreen() {
   const [result, setResult] = useState<PdfResult>();
   const [error, setError] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
-  const { selected } = useComponentSelection();
+  const { content, selected } = useComponentSelection();
   const { setPreview } = usePdfPreview();
   const selectedCount = Object.values(selected).filter(Boolean).length;
 
@@ -84,8 +84,8 @@ export default function PlaygroundScreen() {
                     <Image alt="Document icon" src={documentIcon} style={{ height: 48, width: 48 }} />
                   ) : null}
                   <Stack gap={4}>
-                    <Heading style={{ margin: 0 }}>Basic components</Heading>
-                    <Text style={{ color: '#475569' }}>A printable component gallery generated on your device.</Text>
+                    <Heading style={{ margin: 0 }}>{content.heading}</Heading>
+                    <Text style={{ color: '#475569' }}>{content.text}</Text>
                   </Stack>
                 </Stack>
                 {selected.divider ? (

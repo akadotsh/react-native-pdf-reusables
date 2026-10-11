@@ -32,21 +32,31 @@ const initialSelection: Record<OptionalComponent, boolean> = {
 };
 
 type ComponentSelection = {
+  content: { heading: string; text: string };
   selected: Record<OptionalComponent, boolean>;
+  setContent: (field: 'heading' | 'text', value: string) => void;
   toggle: (component: OptionalComponent) => void;
 };
 
 const ComponentSelectionContext = createContext<ComponentSelection | null>(null);
 
 export function ComponentSelectionProvider({ children }: PropsWithChildren) {
+  const [content, setContentState] = useState({
+    heading: 'Basic components',
+    text: 'A printable component gallery generated on your device.',
+  });
   const [selected, setSelected] = useState(initialSelection);
+
+  function setContent(field: 'heading' | 'text', value: string) {
+    setContentState((current) => ({ ...current, [field]: value }));
+  }
 
   function toggle(component: OptionalComponent) {
     setSelected((current) => ({ ...current, [component]: !current[component] }));
   }
 
   return (
-    <ComponentSelectionContext.Provider value={{ selected, toggle }}>
+    <ComponentSelectionContext.Provider value={{ content, selected, setContent, toggle }}>
       {children}
     </ComponentSelectionContext.Provider>
   );
