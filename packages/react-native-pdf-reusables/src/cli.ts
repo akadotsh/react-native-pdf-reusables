@@ -32,6 +32,7 @@ const components = [
 ] as const;
 
 const styledComponents = new Set<string>(components.filter((name) => name !== 'document' && name !== 'page-break'));
+
 const registry: Record<string, RegistryEntry> = Object.fromEntries(
   components.map((name) => [
     name,
@@ -70,15 +71,23 @@ type AddOptions = {
 
 async function main() {
   const args = process.argv.slice(2);
+
   if (args.includes('--help') || args.includes('-h') || args.length === 0) {
     printHelp();
+
     return;
   }
+
   if (args.includes('--version') || args.includes('-v')) {
-    const packageJson = JSON.parse(await readFile(resolve(packageRoot(), 'package.json'), 'utf8')) as { version: string };
+    const packageJson: unknown = JSON.parse(await readFile(resolve(packageRoot(), 'package.json'), 'utf8'));
+
+    if (!isPackageVersion(packageJson)) throw new Error('Invalid package.json version.');
+
     console.log(packageJson.version);
+
     return;
   }
+
   if (args[0] !== 'add') throw new Error(`Unknown command "${args[0]}". Run with --help for usage.`);
 
   await add(parseAddOptions(args.slice(1)));
@@ -89,11 +98,14 @@ function parseAddOptions(args: string[]): AddOptions {
 
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
+
     if (argument === '--overwrite') {
       options.overwrite = true;
     } else if (argument === '--cwd' || argument === '--path') {
       const value = args[index + 1];
+
       if (!value || value.startsWith('-')) throw new Error(`${argument} requires a value.`);
+
       if (argument === '--cwd') options.cwd = resolve(value);
       else options.target = value;
       index += 1;
@@ -105,10 +117,12 @@ function parseAddOptions(args: string[]): AddOptions {
   }
 
   if (options.names.length === 0) throw new Error('Add at least one component name.');
-  const unknown = options.names.filter((name) => !publicEntries.includes(name as (typeof publicEntries)[number]));
+  const unknown = options.names.filter((name) => !publicEntries.some((entry) => entry === name));
+
   if (unknown.length > 0) {
     throw new Error(`Unknown component${unknown.length > 1 ? 's' : ''}: ${unknown.join(', ')}\nAvailable: ${publicEntries.join(', ')}`);
   }
+
   return options;
 }
 
@@ -116,19 +130,23 @@ async function add(options: AddOptions) {
   await readProjectPackage(options.cwd);
   const defaultTarget = (await pathExists(resolve(options.cwd, 'src'))) ? 'src/components/pdf' : 'components/pdf';
   const target = options.target ?? defaultTarget;
+
   if (isAbsolute(target)) throw new Error('--path must be relative to the project directory.');
 
   const targetRoot = resolve(options.cwd, target);
   const relativeTarget = relative(options.cwd, targetRoot);
+
   if (relativeTarget === '..' || relativeTarget.startsWith(`..${process.platform === 'win32' ? '\\' : '/'}`)) {
     throw new Error('--path must stay inside the project directory.');
   }
 
   const entries = resolveEntries(options.names);
+
   const plans = await Promise.all(
     entries.map(async ([name, entry]) => {
       const source = resolve(packageRoot(), 'src', entry.source!);
       const destination = resolve(targetRoot, entry.destination!);
+
       return { content: rewriteImports(await readFile(source, 'utf8'), entry), destination, name };
     }),
   );
@@ -136,14 +154,16 @@ async function add(options: AddOptions) {
   const conflicts: string[] = [];
   const writes: typeof plans = [];
   const unchanged: string[] = [];
+
   for (const plan of plans) {
     try {
       const current = await readFile(plan.destination, 'utf8');
+
       if (current === plan.content) unchanged.push(plan.name);
       else if (options.overwrite) writes.push(plan);
       else conflicts.push(relative(options.cwd, plan.destination));
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+      if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
       writes.push(plan);
     }
   }
@@ -159,8 +179,10 @@ async function add(options: AddOptions) {
 
   if (writes.length > 0) {
     console.log(`Added ${writes.length} file${writes.length === 1 ? '' : 's'} to ${relative(options.cwd, targetRoot)}:`);
+
     for (const plan of writes) console.log(`  ${relative(targetRoot, plan.destination)}`);
   }
+
   if (unchanged.length > 0) console.log(`Unchanged: ${unchanged.join(', ')}`);
 }
 
@@ -172,18 +194,23 @@ function resolveEntries(names: readonly string[]) {
     if (visited.has(name)) return;
     visited.add(name);
     const entry = registry[name];
+
     if (!entry) throw new Error(`Registry entry "${name}" is missing.`);
+
     for (const dependency of entry.dependencies ?? []) visit(dependency);
+
     if (entry.source && entry.destination) resolved.push([name, { ...entry, destination: entry.destination, source: entry.source }]);
   }
 
   for (const name of names) visit(name);
+
   return resolved;
 }
 
 function rewriteImports(content: string, entry: RegistryEntry): string {
   const sourceDirectory = dirname(entry.source!);
   const destinationDirectory = dirname(entry.destination!);
+
   const sourceToDestination = new Map(
     Object.values(registry)
       .filter((item): item is RegistryEntry & { destination: string; source: string } => Boolean(item.source && item.destination))
@@ -193,9 +220,12 @@ function rewriteImports(content: string, entry: RegistryEntry): string {
   return content.replace(/((?:from\s+|import\()(['"]))(\.{1,2}\/[^'"]+)\2/g, (match, prefix: string, _quote: string, specifier: string) => {
     const sourcePath = stripExtension(normalize(join(sourceDirectory, specifier))).replaceAll('\\', '/');
     const destination = sourceToDestination.get(sourcePath);
+
     if (!destination) return match.replace(/\.js(['"]?)$/, '$1');
     let next = relative(destinationDirectory, stripExtension(destination)).replaceAll('\\', '/');
+
     if (!next.startsWith('.')) next = `./${next}`;
+
     return `${prefix}${next}${prefix.at(-1)}`;
   });
 }
@@ -208,7 +238,7 @@ async function readProjectPackage(cwd: string) {
   try {
     JSON.parse(await readFile(resolve(cwd, 'package.json'), 'utf8'));
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') throw new Error(`No package.json found in ${cwd}.`);
+    if (isNodeError(error) && error.code === 'ENOENT') throw new Error(`No package.json found in ${cwd}.`);
     throw new Error(`Could not read package.json in ${cwd}.`, { cause: error });
   }
 }
@@ -216,16 +246,27 @@ async function readProjectPackage(cwd: string) {
 async function pathExists(path: string) {
   try {
     await stat(path);
+
     return true;
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'EISDIR') return true;
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false;
+    if (isNodeError(error) && error.code === 'EISDIR') return true;
+
+    if (isNodeError(error) && error.code === 'ENOENT') return false;
+
     return true;
   }
 }
 
 function packageRoot() {
   return resolve(dirname(fileURLToPath(import.meta.url)), '..');
+}
+
+function isPackageVersion(value: unknown): value is { version: string } {
+  return typeof value === 'object' && value !== null && 'version' in value && typeof value.version === 'string';
+}
+
+function isNodeError(cause: unknown): cause is NodeJS.ErrnoException {
+  return cause instanceof Error && 'code' in cause;
 }
 
 function printHelp() {
@@ -247,7 +288,7 @@ Components:
   ${publicEntries.join(', ')}`);
 }
 
-main().catch((error: unknown) => {
-  console.error(error instanceof Error ? error.message : error);
+main().catch((cause: unknown) => {
+  console.error(cause instanceof Error ? cause.message : cause);
   process.exitCode = 1;
 });

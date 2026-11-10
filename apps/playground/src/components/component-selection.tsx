@@ -86,6 +86,7 @@ export function ComponentSelectionProvider({ children }: PropsWithChildren) {
     text: 'A printable component gallery generated on your device.',
     total: 'INR 1,180',
   });
+
   const [pagePadding, setPagePadding] = useState(32);
   const [pageSize, setPageSize] = useState<PageSize>('A4');
   const [selected, setSelected] = useState(initialSelection);
@@ -120,5 +121,6 @@ export function useComponentSelection() {
   const value = useContext(ComponentSelectionContext);
 
   if (!value) throw new Error('useComponentSelection must be used inside ComponentSelectionProvider');
+
   return value;
 }

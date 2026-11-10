@@ -8,6 +8,7 @@ export default function Layout({ children }: LayoutProps<'/docs'>) {
     <DocsLayout
       tree={source.getPageTree()}
       containerProps={{
+        // SAFETY: Fumadocs consumes this valid CSS custom property; React's CSSProperties omits custom keys.
         style: { '--fd-layout-width': '100vw' } as CSSProperties,
       }}
       {...baseOptions()}

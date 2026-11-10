@@ -27,5 +27,6 @@ export function usePdfPreview() {
   const value = useContext(PdfPreviewContext);
 
   if (!value) throw new Error('usePdfPreview must be used inside PdfPreviewProvider');
+
   return value;
 }

@@ -19,5 +19,6 @@ export async function renderToPdf(node: ReactNode): Promise<PdfResult> {
   }
 
   const result = await print.printToFileAsync({ html: renderToHtml(node) });
+
   return { numberOfPages: result.numberOfPages, uri: result.uri };
 }

@@ -9,18 +9,24 @@ export type PdfFont = {
 
 const fonts = new Map<string, PdfFont>();
 
+function isValidWeight(value: PdfFont['weight']): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 1 && value <= 1000;
+}
+
 export function registerFont(font: PdfFont): void {
   if (!font.family.trim() || !font.src.trim()) {
     throw new TypeError('registerFont requires a non-empty family and src');
   }
+
   if (font.style != null && font.style !== 'normal' && font.style !== 'italic') {
     throw new TypeError('registerFont style must be normal or italic');
   }
+
   if (
     font.weight != null &&
     font.weight !== 'normal' &&
     font.weight !== 'bold' &&
-    (typeof font.weight !== 'number' || !Number.isFinite(font.weight) || font.weight < 1 || font.weight > 1000)
+    !isValidWeight(font.weight)
   ) {
     throw new TypeError('registerFont weight must be normal, bold, or a number from 1 to 1000');
   }

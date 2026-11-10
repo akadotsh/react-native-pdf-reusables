@@ -1,27 +1,23 @@
-import { Children, isValidElement, type ReactNode } from 'react';
+import { Children, isValidElement, type ComponentType, type ReactElement, type ReactNode } from 'react';
 
-import { DataTable, type DataTableProps } from './components/data-table/data-table.js';
-import { Divider, type DividerProps } from './components/divider/divider.js';
+import { DataTable } from './components/data-table/data-table.js';
+import { Divider } from './components/divider/divider.js';
 import { Document, type DocumentProps } from './components/document/document.js';
-import { Heading, type HeadingProps } from './components/heading/heading.js';
-import { Image, type ImageProps } from './components/image/image.js';
-import { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together.js';
-import {
-  KeyValueList,
-  type KeyValueItem,
-  type KeyValueListProps,
-} from './components/key-value-list/key-value-list.js';
-import { Link, type LinkProps } from './components/link/link.js';
+import { Heading } from './components/heading/heading.js';
+import { Image } from './components/image/image.js';
+import { KeepTogether } from './components/keep-together/keep-together.js';
+import { KeyValueList, type KeyValueItem } from './components/key-value-list/key-value-list.js';
+import { Link } from './components/link/link.js';
 import { PageBreak } from './components/page-break/page-break.js';
-import { PageFooter, type PageFooterProps } from './components/page-footer/page-footer.js';
-import { PageHeader, type PageHeaderProps } from './components/page-header/page-header.js';
-import { Page, type PageProps, type PageSize } from './components/page/page.js';
-import { Signature, type SignatureProps } from './components/signature/signature.js';
-import { Stack, type StackProps } from './components/stack/stack.js';
-import { Text, type TextProps } from './components/text/text.js';
-import { ThemeProvider, type ThemeProviderProps } from './components/theme-provider/theme-provider.js';
-import { Totals, type TotalsProps } from './components/totals/totals.js';
-import { Watermark, type WatermarkProps } from './components/watermark/watermark.js';
+import { PageFooter } from './components/page-footer/page-footer.js';
+import { PageHeader } from './components/page-header/page-header.js';
+import { Page, type PageSize } from './components/page/page.js';
+import { Signature } from './components/signature/signature.js';
+import { Stack } from './components/stack/stack.js';
+import { Text } from './components/text/text.js';
+import { ThemeProvider } from './components/theme-provider/theme-provider.js';
+import { Totals } from './components/totals/totals.js';
+import { Watermark } from './components/watermark/watermark.js';
 import { registeredFonts } from './font.js';
 import type { PdfStyle, PdfStyleProp, PdfTheme, ThemeTokens } from './style.js';
 
@@ -29,16 +25,46 @@ const emptyTheme: PdfTheme = { colors: {}, fonts: {}, spacing: {} };
 const unitlessProperties = new Set(['flex', 'flexGrow', 'flexShrink', 'fontWeight', 'opacity', 'order', 'zIndex']);
 
 export function renderToHtml(node: ReactNode): string {
-  if (!isValidElement(node)) {
+  if (!isComponentElement(node, Document)) {
     throw new TypeError('renderToHtml expects a PDF component element');
   }
 
-  if (node.type === Document) return renderDocument(node.props as DocumentProps);
-  return renderNode(node, emptyTheme);
+  return renderDocument(node.props);
+}
+
+function isComponentElement<Props>(node: ReactNode, component: ComponentType<Props>): node is ReactElement<Props> {
+  return isValidElement<Props>(node) && node.type === component;
+}
+
+function isBooleanNode(node: ReactNode): node is boolean {
+  return typeof node === 'boolean';
+}
+
+function isTextNode(node: ReactNode): node is string | number {
+  return typeof node === 'string' || typeof node === 'number';
+}
+
+function isStyleFactory(style: PdfStyleProp): style is (theme: PdfTheme) => PdfStyle {
+  return typeof style === 'function';
+}
+
+function isFunctionComponentType(value: ReactElement['type']): value is React.FunctionComponent {
+  return typeof value === 'function' && !(
+    value.prototype && 'isReactComponent' in value.prototype && value.prototype.isReactComponent === true
+  );
+}
+
+function hasComponentProps(value: unknown): value is {} {
+  return typeof value === 'object' && value !== null;
+}
+
+function isFiniteNumber(value: string | number): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
 }
 
 function renderDocument(props: DocumentProps): string {
   const title = props.title ? '<title>' + escapeText(props.title) + '</title>' : '';
+
   return (
     '<!doctype html><html><head><meta charset="utf-8">' +
     title +
@@ -52,57 +78,68 @@ function renderDocument(props: DocumentProps): string {
 }
 
 function renderNode(node: ReactNode, theme: PdfTheme): string {
-  if (node == null || typeof node === 'boolean') return '';
-  if (typeof node === 'string' || typeof node === 'number') return escapeText(String(node));
+  if (node == null || isBooleanNode(node)) return '';
+
+  if (isTextNode(node)) return escapeText(String(node));
+
   if (Array.isArray(node)) return node.map((child) => renderNode(child, theme)).join('');
+
   if (!isValidElement(node)) {
     throw new TypeError('PDF components only support text and other PDF components');
   }
 
-  if (node.type === ThemeProvider) {
-    const props = node.props as ThemeProviderProps;
+  if (isComponentElement(node, ThemeProvider)) {
+    const props = node.props;
+
     return renderChildren(props.children, mergeTheme(theme, props.tokens));
   }
 
-  if (node.type === Text) {
-    const props = node.props as TextProps;
+  if (isComponentElement(node, Text)) {
+    const props = node.props;
+
     return '<span' + styleAttribute(props.style, theme) + '>' + renderChildren(props.children, theme) + '</span>';
   }
 
-  if (node.type === Heading) {
-    const props = node.props as HeadingProps;
+  if (isComponentElement(node, Heading)) {
+    const props = node.props;
     const tag = 'h' + String(props.level ?? 1);
+
     return (
       '<' + tag + styleAttribute(props.style, theme) + '>' + renderChildren(props.children, theme) + '</' + tag + '>'
     );
   }
 
-  if (node.type === Stack) {
-    const props = node.props as StackProps;
+  if (isComponentElement(node, Stack)) {
+    const props = node.props;
     const style = mergeStyle({ display: 'flex', flexDirection: 'column', gap: props.gap }, props.style, theme);
+
     return '<div' + styleAttribute(style, theme) + '>' + renderChildren(props.children, theme) + '</div>';
   }
 
-  if (node.type === KeepTogether) {
-    const props = node.props as KeepTogetherProps;
+  if (isComponentElement(node, KeepTogether)) {
+    const props = node.props;
     const style = mergeStyle({ breakInside: 'avoid', pageBreakInside: 'avoid' }, props.style, theme);
+
     return '<div' + styleAttribute(style, theme) + '>' + renderChildren(props.children, theme) + '</div>';
   }
 
-  if (node.type === KeyValueList) {
-    const props = node.props as KeyValueListProps;
+  if (isComponentElement(node, KeyValueList)) {
+    const props = node.props;
+
     return '<dl' + styleAttribute(props.style, theme) + '>' + renderKeyValueItems(props.items, theme) + '</dl>';
   }
 
-  if (node.type === DataTable) {
-    const props = node.props as DataTableProps<unknown>;
+  if (isComponentElement(node, DataTable)) {
+    const props = node.props;
     const tableStyle = mergeStyle({ borderCollapse: 'collapse', width: '100%' }, props.style, theme);
+
     const headers = props.columns
       .map(
         (column) =>
           '<th' + styleAttribute(props.headerStyle, theme) + '>' + renderNode(column.header, theme) + '</th>',
       )
       .join('');
+
     const rows = props.rows
       .map((row, rowIndex) => {
         const cells = props.columns
@@ -115,10 +152,13 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
               '</td>',
           )
           .join('');
+
         return '<tr style="break-inside:avoid;page-break-inside:avoid">' + cells + '</tr>';
       })
       .join('');
+
     const headerStyle = props.repeatHeader === false ? '' : ' style="display:table-header-group"';
+
     return (
       '<table' +
       styleAttribute(tableStyle, theme) +
@@ -132,25 +172,29 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
     );
   }
 
-  if (node.type === Totals) {
-    const props = node.props as TotalsProps;
+  if (isComponentElement(node, Totals)) {
+    const props = node.props;
     const style = mergeStyle({ breakInside: 'avoid', pageBreakInside: 'avoid' }, props.style, theme);
+
     return '<dl data-pdf-totals' + styleAttribute(style, theme) + '>' + renderKeyValueItems(props.items, theme) + '</dl>';
   }
 
-  if (node.type === PageHeader) {
-    const props = node.props as PageHeaderProps;
+  if (isComponentElement(node, PageHeader)) {
+    const props = node.props;
+
     return '<header' + styleAttribute(props.style, theme) + '>' + renderChildren(props.children, theme) + '</header>';
   }
 
-  if (node.type === PageFooter) {
-    const props = node.props as PageFooterProps;
+  if (isComponentElement(node, PageFooter)) {
+    const props = node.props;
+
     return '<footer' + styleAttribute(props.style, theme) + '>' + renderChildren(props.children, theme) + '</footer>';
   }
 
-  if (node.type === Signature) {
-    const props = node.props as SignatureProps;
+  if (isComponentElement(node, Signature)) {
+    const props = node.props;
     const style = mergeStyle({ breakInside: 'avoid', pageBreakInside: 'avoid' }, props.style, theme);
+
     return (
       '<div data-pdf-signature' +
       styleAttribute(style, theme) +
@@ -162,8 +206,9 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
     );
   }
 
-  if (node.type === Watermark) {
-    const props = node.props as WatermarkProps;
+  if (isComponentElement(node, Watermark)) {
+    const props = node.props;
+
     const style = mergeStyle(
       {
         left: '50%',
@@ -176,6 +221,7 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
       props.style,
       theme,
     );
+
     return (
       '<div data-pdf-watermark' +
       styleAttribute(style, theme) +
@@ -185,9 +231,10 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
     );
   }
 
-  if (node.type === Page) {
-    const props = node.props as PageProps;
+  if (isComponentElement(node, Page)) {
+    const props = node.props;
     const style = mergeStyle({ ...pageDimensions(props.size ?? 'A4'), breakAfter: 'page' }, props.style, theme);
+
     return (
       '<section data-pdf-page' +
       styleAttribute(style, theme) +
@@ -201,8 +248,9 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
     return '<div style="break-before:page;page-break-before:always"></div>';
   }
 
-  if (node.type === Image) {
-    const props = node.props as ImageProps;
+  if (isComponentElement(node, Image)) {
+    const props = node.props;
+
     return (
       '<img src="' +
       escapeAttribute(props.src) +
@@ -214,13 +262,15 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
     );
   }
 
-  if (node.type === Divider) {
-    const props = node.props as DividerProps;
+  if (isComponentElement(node, Divider)) {
+    const props = node.props;
+
     return '<hr' + styleAttribute(props.style, theme) + '>';
   }
 
-  if (node.type === Link) {
-    const props = node.props as LinkProps;
+  if (isComponentElement(node, Link)) {
+    const props = node.props;
+
     return (
       '<a href="' +
       escapeAttribute(props.href) +
@@ -232,17 +282,15 @@ function renderNode(node: ReactNode, theme: PdfTheme): string {
     );
   }
 
-  if (typeof node.type === 'function') {
-    const component = node.type as unknown as {
-      (props: unknown): ReactNode;
-      prototype?: { isReactComponent?: unknown };
-    };
-    if (component.prototype?.isReactComponent) {
-      throw new TypeError('Class components are not supported in PDF documents');
-    }
+  if (isFunctionComponentType(node.type)) {
+    if (!hasComponentProps(node.props)) throw new TypeError('PDF components require object props');
 
     // shortcut: composite components must be pure functions without hooks, add a custom reconciler when hooks are needed.
-    return renderNode(component(node.props), theme);
+    const rendered = node.type(node.props);
+
+    if (rendered instanceof Promise) throw new TypeError('Async components are not supported in PDF documents');
+
+    return renderNode(rendered, theme);
   }
 
   throw new TypeError('Unsupported PDF component');
@@ -271,11 +319,12 @@ function renderKeyValueItems(items: readonly KeyValueItem[], theme: PdfTheme): s
 function styleAttribute(style: PdfStyleProp | undefined, theme: PdfTheme): string {
   if (!style) return '';
 
-  const declarations = Object.entries(expandSpacing(typeof style === 'function' ? style(theme) : style))
+  const declarations = Object.entries(expandSpacing(isStyleFactory(style) ? style(theme) : style))
     .filter((entry) => entry[1] != null)
     .map(([property, value]) => {
       const cssProperty = property.replace(/[A-Z]/g, (letter) => '-' + letter.toLowerCase());
-      const cssValue = typeof value === 'number' && !unitlessProperties.has(property) ? String(value) + 'px' : String(value);
+      const cssValue = (isFiniteNumber(value) && !unitlessProperties.has(property)) ? String(value) + 'px' : String(value);
+
       return cssProperty + ':' + escapeAttribute(cssValue).replaceAll(';', '');
     })
     .join(';');
@@ -284,7 +333,7 @@ function styleAttribute(style: PdfStyleProp | undefined, theme: PdfTheme): strin
 }
 
 function mergeStyle(defaults: PdfStyle, style: PdfStyleProp | undefined, theme: PdfTheme): PdfStyle {
-  return { ...defaults, ...(typeof style === 'function' ? style(theme) : style) };
+  return { ...defaults, ...(style && isStyleFactory(style) ? style(theme) : style) };
 }
 
 function mergeTheme(theme: PdfTheme, tokens: ThemeTokens): PdfTheme {
@@ -303,16 +352,19 @@ function expandSpacing(style: PdfStyle): PdfStyle {
     expanded.marginRight ??= style.marginHorizontal;
     delete expanded.marginHorizontal;
   }
+
   if (style.marginVertical != null) {
     expanded.marginBottom ??= style.marginVertical;
     expanded.marginTop ??= style.marginVertical;
     delete expanded.marginVertical;
   }
+
   if (style.paddingHorizontal != null) {
     expanded.paddingLeft ??= style.paddingHorizontal;
     expanded.paddingRight ??= style.paddingHorizontal;
     delete expanded.paddingHorizontal;
   }
+
   if (style.paddingVertical != null) {
     expanded.paddingBottom ??= style.paddingVertical;
     expanded.paddingTop ??= style.paddingVertical;
@@ -326,6 +378,7 @@ function renderFontFaces(): string {
   return Array.from(registeredFonts(), (font) => {
     const family = escapeCssString(font.family);
     const src = escapeCssString(font.src);
+
     return (
       '@font-face{font-family:"' +
       family +

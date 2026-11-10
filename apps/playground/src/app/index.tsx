@@ -185,6 +185,7 @@ export default function PlaygroundScreen() {
           </PreviewTheme>
         </Document>
       );
+
       const html = renderToHtml(document);
       const pdf = await renderToPdf(document);
 
